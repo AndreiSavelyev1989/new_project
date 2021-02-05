@@ -1,0 +1,60 @@
+.red {
+    position: relative;
+    display: inline-block;
+    font-size: 90%;
+    font-weight: 700;
+    color: rgb(209,209,217);
+    text-decoration: none;
+    text-shadow: 0 -1px 2px rgba(0,0,0,.2);
+    padding: .5em 1em;
+    outline: none;
+    border-radius: 3px;
+    background: linear-gradient(rgb(198, 69, 80), rgb(181, 34, 34)) rgb(231, 28, 71);
+    box-shadow:
+            0 1px rgba(255,255,255,.2) inset,
+            0 3px 5px rgba(0,1,6,.5),
+            0 0 1px 1px rgba(0,1,6,.2);
+    transition: .2s ease-in-out;
+}
+
+.red:hover:not(:active) {
+    background: linear-gradient(rgb(214, 98, 107), rgb(229, 15, 15)) rgb(167, 15, 47);
+}
+.red:active {
+    top: 1px;
+    background: linear-gradient(rgb(214, 98, 107), rgb(229, 15, 15)) rgb(167, 15, 47);
+    box-shadow:
+            0 0 1px rgba(0,0,0,.5) inset,
+            0 2px 3px rgba(0,0,0,.5) inset,
+            0 1px 1px rgba(255,255,255,.1);
+}
+
+.default {
+    position: relative;
+    display: inline-block;
+    font-size: 90%;
+    font-weight: 700;
+    color: rgb(209,209,217);
+    text-decoration: none;
+    text-shadow: 0 -1px 2px rgba(0,0,0,.2);
+    padding: .5em 1em;
+    outline: none;
+    border-radius: 3px;
+    background: linear-gradient(rgb(85, 184, 60), rgb(24, 107, 4)) rgb(46, 217, 64);
+    box-shadow:
+            0 1px rgba(255,255,255,.2) inset,
+            0 3px 5px rgba(0,1,6,.5),
+            0 0 1px 1px rgba(0,1,6,.2);
+    transition: .2s ease-in-out;
+}
+.default:hover:not(:active) {
+    background: linear-gradient(rgb(96, 153, 96), rgb(50, 200, 21)) rgb(66, 119, 50);
+}
+.default:active {
+    top: 1px;
+    background: linear-gradient(rgb(96, 153, 96), rgb(50, 200, 21)) rgb(66, 119, 50);
+    box-shadow:
+            0 0 1px rgba(0,0,0,.5) inset,
+            0 2px 3px rgba(0,0,0,.5) inset,
+            0 1px 1px rgba(255,255,255,.1);
+}
