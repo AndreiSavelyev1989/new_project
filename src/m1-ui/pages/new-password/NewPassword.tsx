@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CSS from 'csstype';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  clearStatus,
   failedSubmit,
   restoreReducerType,
   setNewPassword,
@@ -21,6 +22,10 @@ export const NewPassword = () => {
   const { status, error } = useSelector<restoreReducerType, any>(
     (state) => state.restore
   );
+
+  useEffect(() => {
+    dispatch(clearStatus());
+  }, []);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();

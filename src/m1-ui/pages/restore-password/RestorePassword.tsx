@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import CSS from 'csstype';
 import {
   setEmail,
   restorePassword,
   restoreReducerType,
+  clearStatus,
 } from '../../../m2-bll/redusers/restore-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -28,12 +29,23 @@ export const RestorePassword = () => {
     (state) => state.restore
   );
 
+  const submitRestorePassword = useCallback(
+    (currentEmail: string) => {
+      dispatch(restorePassword(currentEmail));
+    },
+    [currentEmail]
+  );
+
+  useEffect(() => {
+    dispatch(clearStatus());
+  }, []);
+
   return (
     <div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          dispatch(restorePassword(currentEmail));
+          submitRestorePassword(currentEmail);
         }}
         style={formStyle}
       >
