@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   clearStatus,
   failedSubmit,
-  restoreReducerType,
+  RestoreStateType,
   setNewPassword,
 } from '../../../m2-bll/redusers/restore-reducer';
 import { useParams } from 'react-router-dom';
+import { AppRootStateType } from '../../../m2-bll/state/store';
 
 const formStyle: CSS.Properties = {
   display: 'flex',
@@ -18,8 +19,8 @@ const formStyle: CSS.Properties = {
 
 export const NewPassword = () => {
   const dispatch = useDispatch();
-  const { resetPasswordToken }: any = useParams();
-  const { status, error } = useSelector<restoreReducerType, any>(
+  const { resetPasswordToken } = useParams<Record<string, string | undefined>>();
+  const { status, error } = useSelector<AppRootStateType, RestoreStateType>(
     (state) => state.restore
   );
 

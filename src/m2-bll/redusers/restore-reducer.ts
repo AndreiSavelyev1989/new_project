@@ -7,26 +7,68 @@ const LOADING = 'LOADING';
 const SET_EMAIL = 'SET_EMAIL';
 const CLEAR_STATUS = 'CLEAR_STATUS';
 
-const initialState = {
+type SuccessSubmitType = {
+  type: typeof SUCCESS_SUBMIT;
+};
+
+type FailedSubmitType = {
+  type: typeof FAILED_SUBMIT;
+  error: string;
+};
+
+type SetEmailType = {
+  type: typeof SET_EMAIL;
+  email: string;
+};
+
+type ClearStatusType = {
+  type: typeof CLEAR_STATUS;
+};
+
+type LoadingType = {
+  type: typeof LOADING;
+};
+
+type ActionsType =
+  | SuccessSubmitType
+  | FailedSubmitType
+  | SetEmailType
+  | ClearStatusType
+  | LoadingType;
+
+export type RestoreStateType = {
+  currentEmail: null | string;
+  error: null | string;
+  status: null | string;
+};
+
+export const successSubmit = (): SuccessSubmitType => ({
+  type: SUCCESS_SUBMIT,
+});
+
+export const failedSubmit = (error: string): FailedSubmitType => ({
+  type: FAILED_SUBMIT,
+  error,
+});
+
+export const setEmail = (email: string): SetEmailType => ({
+  type: SET_EMAIL,
+  email,
+});
+
+export const clearStatus = (): ClearStatusType => ({
+  type: CLEAR_STATUS,
+});
+
+const initialState: RestoreStateType = {
   currentEmail: null,
   error: null,
   status: null,
 };
 
-export const successSubmit = () => ({
-  type: SUCCESS_SUBMIT,
-});
-
-export const failedSubmit = (error: any) => ({
-  type: FAILED_SUBMIT,
-  error,
-});
-
-export type restoreReducerType = any;
-
 export const restoreReducer = (
-  state: restoreReducerType = initialState,
-  action: any
+  state: RestoreStateType = initialState,
+  action: ActionsType
 ) => {
   switch (action.type) {
     case SUCCESS_SUBMIT: {
@@ -54,16 +96,7 @@ export const restoreReducer = (
   }
 };
 
-export const setEmail = (email: string) => ({
-  type: SET_EMAIL,
-  email,
-});
-
-export const clearStatus = () => ({
-  type: CLEAR_STATUS,
-});
-
-export const restorePassword = (email: string) => async (
+export const restorePassword = (email: string | null) => async (
   dispatch: Dispatch
 ) => {
   try {

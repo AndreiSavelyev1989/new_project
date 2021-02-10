@@ -5,9 +5,14 @@ const instance = axios.create({
   baseURL: 'https://neko-back.herokuapp.com/2.0/',
 });
 
+type ResponseType = {
+  info: string,
+  error?: string
+};
+
 export const restoreAPI = {
-  restorePassword: async (email: string) => {
-    const promise = await instance.post('auth/forgot', {
+  restorePassword: async (email: string | null) => {
+    const promise = await instance.post<ResponseType>('auth/forgot', {
       email,
       from: 'dreamonaut@mail.ru',
       message: `<div style="background-color: lime; padding: 15px">
@@ -18,7 +23,7 @@ export const restoreAPI = {
     return promise;
   },
   setNewPassword: async (password: string, resetPasswordToken: string) => {
-    const promise = await instance.post('auth/set-new-password', {
+    const promise = await instance.post<ResponseType>('auth/set-new-password', {
       password: password,
       resetPasswordToken: resetPasswordToken,
     });

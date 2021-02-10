@@ -3,10 +3,11 @@ import CSS from 'csstype';
 import {
   setEmail,
   restorePassword,
-  restoreReducerType,
+  RestoreStateType,
   clearStatus,
 } from '../../../m2-bll/redusers/restore-reducer';
 import { useDispatch, useSelector } from 'react-redux';
+import { AppRootStateType } from '../../../m2-bll/state/store';
 
 const formStyle: CSS.Properties = {
   display: 'flex',
@@ -25,12 +26,13 @@ const buttonStyle: CSS.Properties = {
 
 export const RestorePassword = () => {
   const dispatch = useDispatch();
-  const { status, currentEmail } = useSelector<restoreReducerType, any>(
-    (state) => state.restore
-  );
+  const { status, currentEmail } = useSelector<
+    AppRootStateType,
+    RestoreStateType
+  >((state) => state.restore);
 
   const submitRestorePassword = useCallback(
-    (currentEmail: string) => {
+    (currentEmail) => {
       dispatch(restorePassword(currentEmail));
     },
     [currentEmail]
