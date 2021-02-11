@@ -1,0 +1,53 @@
+import {authApi, LoginDataType} from "../../api/auth-api";
+import {Dispatch} from "redux";
+
+
+type initialStateType = {
+    isLoggedIn: boolean
+    error: string | null
+}
+const intialState: initialStateType = {
+    isLoggedIn: false,
+    error:null
+}
+
+
+//reducers
+export const loginReducer = (state = intialState, action: ActionLoginType): initialStateType => {
+    switch (action.type) {
+        case "login/SET-IS-LOGGED-IN": {
+            return {...state, isLoggedIn: action.value}
+        }
+        case "login/ERROR": {
+            return {...state, error: action.error}
+        }
+
+        default:
+            return state
+    }
+}
+
+
+//actions
+export const setErrorAC = (error: string | null) => ({type:"login/ERROR", error} as const)
+export const isLogedInAC = (value: boolean) => ({type: "login/SET-IS-LOGGED-IN", value} as const)
+type ActionLoginType = ReturnType<typeof isLogedInAC> | ReturnType<typeof setErrorAC>
+
+
+//thunk
+export const loginTC = (data: LoginDataType) => (dispatch: Dispatch) => {
+    authApi.login(data)
+        .then(res => {
+            if (res.data.email) {
+                dispatch(isLogedInAC(true))
+            }
+        })
+        .catch(e => {
+            const error = e.response
+                ? e.response.data.error
+                : (e.message + ', more details in the console');
+            dispatch(setErrorAC(error))
+            console.log('Error: ', {...e})
+            return console.log(error)
+        })
+}
