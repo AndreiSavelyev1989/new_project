@@ -1,12 +1,12 @@
 import { Dispatch } from 'redux';
-import {restoreAPI} from "../../m3-dal/api";
+import { restoreAPI } from '../../m3-dal/api';
 
-
-const SUCCESS_SUBMIT = 'SUCCESS_SUBMIT';
-const FAILED_SUBMIT = 'FAILED_SUBMIT';
-const LOADING = 'LOADING';
-const SET_EMAIL = 'SET_EMAIL';
-const CLEAR_STATUS = 'CLEAR_STATUS';
+const SUCCESS_SUBMIT = 'restore/SUCCESS_SUBMIT';
+const FAILED_SUBMIT = 'restore/FAILED_SUBMIT';
+const LOADING = 'restore/LOADING';
+const SET_EMAIL = 'restore/SET_EMAIL';
+const CLEAR_STATUS = 'restore/CLEAR_STATUS';
+const INIT = 'restore/INIT';
 
 type SuccessSubmitType = {
   type: typeof SUCCESS_SUBMIT;
@@ -30,12 +30,17 @@ type LoadingType = {
   type: typeof LOADING;
 };
 
+type InitType = {
+  type: typeof INIT;
+};
+
 type ActionsType =
   | SuccessSubmitType
   | FailedSubmitType
   | SetEmailType
   | ClearStatusType
-  | LoadingType;
+  | LoadingType
+  | InitType;
 
 export type RestoreStateType = {
   currentEmail: null | string;
@@ -60,6 +65,10 @@ export const setEmail = (email: string): SetEmailType => ({
 export const clearStatus = (): ClearStatusType => ({
   type: CLEAR_STATUS,
 });
+
+export const initRestorePage = (): InitType => ({
+  type: INIT
+})
 
 const initialState: RestoreStateType = {
   currentEmail: null,
@@ -91,6 +100,9 @@ export const restoreReducer = (
     }
     case CLEAR_STATUS: {
       return { ...state, status: null };
+    }
+    case INIT: {
+      return { ...state, status: null, error: null };
     }
     default:
       return state;
