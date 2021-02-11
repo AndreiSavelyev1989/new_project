@@ -1,5 +1,5 @@
-import {authApi, LoginDataType} from "../../api/auth-api";
 import {Dispatch} from "redux";
+import {loginApi, LoginDataType} from "../../m3-dal/api";
 
 
 type initialStateType = {
@@ -10,8 +10,6 @@ const intialState: initialStateType = {
     isLoggedIn: false,
     error:null
 }
-
-
 //reducers
 export const loginReducer = (state = intialState, action: ActionLoginType): initialStateType => {
     switch (action.type) {
@@ -26,8 +24,6 @@ export const loginReducer = (state = intialState, action: ActionLoginType): init
             return state
     }
 }
-
-
 //actions
 export const setErrorAC = (error: string | null) => ({type:"login/ERROR", error} as const)
 export const isLogedInAC = (value: boolean) => ({type: "login/SET-IS-LOGGED-IN", value} as const)
@@ -36,7 +32,7 @@ type ActionLoginType = ReturnType<typeof isLogedInAC> | ReturnType<typeof setErr
 
 //thunk
 export const loginTC = (data: LoginDataType) => (dispatch: Dispatch) => {
-    authApi.login(data)
+    loginApi.login(data)
         .then(res => {
             if (res.data.email) {
                 dispatch(isLogedInAC(true))

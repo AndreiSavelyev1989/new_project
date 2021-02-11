@@ -1,51 +1,75 @@
-import React, {ChangeEvent, useState} from "react";
+import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../../m2-bll/state/store";
 import {loginTC} from "../../../m2-bll/redusers/login-reducer";
 import {Redirect} from "react-router-dom";
+import {useFormik} from "formik";
+import CommonInput from "../../../common/c1-CommonInput/CommonInput";
+import CommonButton from "../../../common/c2-CommonButton/CommonButton";
+import style from "../registration/Registration.module.css";
 
+type FormikErrorType = {
+    email?: string
+    password?: string
+    rememberMe?: boolean
+}
 
 export const Login = () => {
-
-    const [email, setEmail] = useState("nya-admin@nya.nya")
-    const [password, setPassword] = useState("1qazxcvBG")
-
-
-
     const dispatch = useDispatch() //разобраться с useDispatch
     const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.login.isLoggedIn)
     const error = useSelector<AppRootStateType, string | null>(state => state.login.error)
 
-    const onClickHandler = () => {
-        dispatch(loginTC({email, password}))
-    }
-    const ChangeEmailCallBack = (e: ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.currentTarget.value)
+    const formik = useFormik({
+        initialValues: {
+            email: 'nya-admin@nya.nya',
+            password: '1qazxcvBG',
+            rememberMe: false
+        },
+        validate: (values) => {
+            const errors: FormikErrorType = {};
+            if (!values.email) {
+                errors.email = 'Required';
+            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+                errors.email = 'Invalid email address';
+            }
 
-    }
+            if (!values.password) {
+                errors.password = 'Required';
+            } else if (values.password.length > 15) {
+                errors.password = 'Password must be 15 characters or less';
+            } else if (values.password.length < 8) {
+                errors.password = 'Password must be more than 7 characters ';
+            }
+            return errors;
+        },
 
-    const ChangePasswordCallBack = (e: ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.currentTarget.value)
-    }
+        onSubmit: values => {
+            dispatch(loginTC(values))
+        },
+    })
     if (isLoggedIn) {
         return <Redirect to={"/"}/>
     }
-
-
     return (
-        <div className={"login"}>
+        <div>
             <div>{error ? error : null}</div>
-            <form className={"login_form"}>
+            <form  onSubmit={formik.handleSubmit}>
                 <h1>Login Here</h1>
-                <input type={"text"}
-                       placeholder={"Email"}
-                       value={email}
-                       onChange={ChangeEmailCallBack}/>
+                <CommonInput
+                    type={"text"}
+                    label={"Email"}
+                    formikFieldsProps={{...formik.getFieldProps("email")}}/>
+                {formik.touched.email && formik.errors.email ?
+                    <div className={style.registrationError}>{formik.errors.email}</div> : null}
 
-                <input type={"password"}
-                       placeholder={"Password"} value={password}
-                       onChange={ChangePasswordCallBack}/>
-                <button onClick={onClickHandler}>Enter</button>
+                <CommonInput
+                    type={"password"}
+                    label={"Password"}
+                    formikFieldsProps={{...formik.getFieldProps("password")}}/>
+                {formik.touched.password && formik.errors.password ?
+                    <div className={style.registrationError}>{formik.errors.password}</div> : null}
+
+                <CommonButton type={"submit"} name={"sign up"}/>
             </form>
 
         </div>

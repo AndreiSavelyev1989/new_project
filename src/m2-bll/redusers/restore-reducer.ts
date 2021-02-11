@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux';
-import { restoreAPI } from '../../m1-ui/pages/restore-password/restore-api';
+import {restoreAPI} from "../../m3-dal/api";
+
 
 const SUCCESS_SUBMIT = 'SUCCESS_SUBMIT';
 const FAILED_SUBMIT = 'FAILED_SUBMIT';
