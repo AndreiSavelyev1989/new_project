@@ -20,7 +20,7 @@ const CommonButton: React.FC<SuperButtonPropsType> = (
 
     return (
         <button
-            className={s.default}
+            className={s.btn}
             {...restProps} // отдаём кнопке остальные пропсы если они есть (children там внутри)
         >{restProps.name}</button>
     );

@@ -51,7 +51,7 @@ export const Login = () => {
         return <Redirect to={"/"}/>
     }
     return (
-        <div>
+        <div className={style.commonContainer}>
             <h1 className={style.title}>Login Here</h1>
             <div className={style.error}>{error ? error : null}</div>
             <form className={style.formBlock} onSubmit={formik.handleSubmit}>
@@ -69,7 +69,7 @@ export const Login = () => {
                 {formik.touched.password && formik.errors.password ?
                     <div className={style.registrationError}>{formik.errors.password}</div> : null}
 
-                <CommonButton type={"submit"} name={"log in"}/>
+                <CommonButton type={"submit"} name={"Login"}/>
             </form>
 
         </div>
