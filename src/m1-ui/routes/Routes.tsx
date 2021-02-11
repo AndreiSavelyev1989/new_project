@@ -7,6 +7,7 @@ import {Registration} from "../pages/registration/Registration";
 import {RestorePassword} from "../pages/restore-password/RestorePassword";
 import {Test} from "../pages/test/Test";
 import {Error404} from "../pages/error404/Error404";
+import style from "../../assets/style/Common.module.css"
 
 export const PATH = {
     LOGIN: "/login",
@@ -19,7 +20,7 @@ export const PATH = {
 
 export const Routes = () => {
     return (
-        <div>
+        <div className={style.commonBlock}>
             <Switch>
                 <Route exact path={"/"} render={() => <Redirect to={PATH.PROFILE}/>}/>
                 <Route path={PATH.PROFILE} render={() => <Profile/>}/>

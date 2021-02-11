@@ -1,0 +1,34 @@
+/*styles Routes common block*/
+.commonBlock {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 40px;
+}
+
+/*styles for all pages*/
+.title {
+    display: flex;
+    justify-content: center;
+}
+
+.formBlock {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.error {
+    margin-bottom: 30px;
+}
+
+.registrationError, .error {
+    color: red;
+    padding: 5px;
+}
+
+.formBlock button {
+    margin-top: 20px;
+    width: 100px;
+}

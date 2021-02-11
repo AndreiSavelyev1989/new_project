@@ -1,5 +1,5 @@
 import React from "react";
-import style from "./Registration.module.css";
+import style from "./../../../assets/style/Common.module.css";
 import {useDispatch, useSelector} from "react-redux";
 import {registrationTC} from "../../../m2-bll/redusers/registration-reducer";
 import {AppRootStateType} from "../../../m2-bll/state/store";
@@ -62,7 +62,8 @@ export const Registration = () => {
     }
 
     return (
-        <div className={style.registrationBlock}>
+        <div>
+            <h1 className={style.title}>Registration</h1>
             <form className={style.formBlock} onSubmit={formik.handleSubmit}>
                 <div className={style.error}>{error ? error : null}</div>
 
