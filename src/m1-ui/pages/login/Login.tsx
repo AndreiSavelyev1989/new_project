@@ -6,7 +6,7 @@ import {Redirect} from "react-router-dom";
 import {useFormik} from "formik";
 import CommonInput from "../../../common/c1-CommonInput/CommonInput";
 import CommonButton from "../../../common/c2-CommonButton/CommonButton";
-import style from "../registration/Registration.module.css";
+import style from "./../../../assets/style/Common.module.css";
 
 type FormikErrorType = {
     email?: string
@@ -21,8 +21,8 @@ export const Login = () => {
 
     const formik = useFormik({
         initialValues: {
-            email: 'nya-admin@nya.nya',
-            password: '1qazxcvBG',
+            email: '',
+            password: '',
             rememberMe: false
         },
         validate: (values) => {
@@ -52,9 +52,9 @@ export const Login = () => {
     }
     return (
         <div>
-            <div>{error ? error : null}</div>
-            <form  onSubmit={formik.handleSubmit}>
-                <h1>Login Here</h1>
+            <h1 className={style.title}>Login Here</h1>
+            <div className={style.error}>{error ? error : null}</div>
+            <form className={style.formBlock} onSubmit={formik.handleSubmit}>
                 <CommonInput
                     type={"text"}
                     label={"Email"}
@@ -69,7 +69,7 @@ export const Login = () => {
                 {formik.touched.password && formik.errors.password ?
                     <div className={style.registrationError}>{formik.errors.password}</div> : null}
 
-                <CommonButton type={"submit"} name={"sign up"}/>
+                <CommonButton type={"submit"} name={"log in"}/>
             </form>
 
         </div>
