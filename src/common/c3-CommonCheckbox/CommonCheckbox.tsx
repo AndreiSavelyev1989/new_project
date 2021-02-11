@@ -7,6 +7,7 @@ type DefaultInputPropsType = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElem
 type SuperCheckboxPropsType = DefaultInputPropsType & {
     onChangeChecked?: (checked: boolean) => void
     spanClassName?: string
+    formikFieldsProps?: any
 };
 
 const CommonCheckbox: React.FC<SuperCheckboxPropsType> = (
@@ -15,28 +16,22 @@ const CommonCheckbox: React.FC<SuperCheckboxPropsType> = (
         onChange, onChangeChecked,
         className, spanClassName,
         children, // в эту переменную попадёт текст, типизировать не нужно так как он затипизирован в React.FC
-
+        formikFieldsProps,
         ...restProps// все остальные пропсы попадут в объект restProps
     }
 ) => {
-    const onChangeCallback = (e: ChangeEvent<HTMLInputElement>) => {
-        onChange && onChange(e)
-        onChangeChecked && onChangeChecked(e.currentTarget.checked)
-    }
 
-    const finalInputClassName = `${s.checkbox} ${className ? className : ""}`;
 
-    return (
+
+    return (<div className={s.cbContainer}>
         <label>
-            <input
+            <input className={s.optionInput}
                 type={"checkbox"}
-                onChange={onChangeCallback}
-                className={finalInputClassName}
-
+                {...formikFieldsProps}
                 {...restProps} // отдаём инпуту остальные пропсы если они есть (checked например там внутри)
-            />
-            {children && <span className={s.spanClassName}>{children}</span>}
-        </label> // благодаря label нажатие на спан передастся в инпут
+            /> Remember me
+        </label>
+        </div> // благодаря label нажатие на спан передастся в инпут
     );
 }
 
