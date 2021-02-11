@@ -7,8 +7,8 @@ import style from "./Test.module.css"
 export const Test = () => {
     return (
         <div className={style.test}>
-            <CommonButton/>
-            <CommonInput/>
+            <CommonButton name={'test'}/>
+            <CommonInput label={'Test'}/>
             <CommonCheckbox/>
         </div>
     )
