@@ -1,32 +1,23 @@
 import React, { useCallback, useEffect } from 'react';
-import CSS from 'csstype';
 import {
-  setEmail,
+  initRestorePage,
   restorePassword,
   RestoreStateType,
-  clearStatus,
 } from '../../../m2-bll/redusers/restore-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootStateType } from '../../../m2-bll/state/store';
+import { useFormik } from 'formik';
+import CommonButton from '../../../common/c2-CommonButton/CommonButton';
+import CommonInput from '../../../common/c1-CommonInput/CommonInput';
+import style from './../../../assets/style/Common.module.css';
 
-const formStyle: CSS.Properties = {
-  display: 'flex',
-  flexDirection: 'column' as 'column',
-};
-
-const labelStyle: CSS.Properties = {
-  display: 'flex',
-  flexDirection: 'column' as 'column',
-  alignItems: 'center',
-};
-
-const buttonStyle: CSS.Properties = {
-  alignSelf: 'center',
+type FormikErrorType = {
+  email?: string;
 };
 
 export const RestorePassword = () => {
   const dispatch = useDispatch();
-  const { status, currentEmail } = useSelector<
+  const { error, currentEmail } = useSelector<
     AppRootStateType,
     RestoreStateType
   >((state) => state.restore);
@@ -39,36 +30,55 @@ export const RestorePassword = () => {
   );
 
   useEffect(() => {
-    dispatch(clearStatus());
-  }, []);
+    dispatch(initRestorePage);
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+    },
+    validate: (values) => {
+      const errors: FormikErrorType = {};
+
+      if (!values.email) {
+        errors.email = 'Required';
+      } else if (
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)/.test(
+          values.email
+        )
+      ) {
+        return undefined;
+      } else {
+        errors.email = 'Write correct email';
+      }
+
+      return errors;
+    },
+
+    onSubmit: (values) => {
+      submitRestorePassword(values.email);
+    },
+  });
 
   return (
     <div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          submitRestorePassword(currentEmail);
-        }}
-        style={formStyle}
-      >
-        <label style={labelStyle} htmlFor="email">
-          <span>Your email</span>
-          <input
-            onChange={(e) => dispatch(setEmail(e.target.value))}
-            type="email"
-            name="email"
-            id="email"
-            required
-            autoFocus
-          />
-        </label>
-        <button style={buttonStyle} type="submit">
-          Send request
-        </button>
+      <h1 className={style.title}>Set new password</h1>
+      <form className={style.formBlock} onSubmit={formik.handleSubmit}>
+        <div className={style.error}>{error ? error : null}</div>
+
+        <CommonInput
+          type={'text'}
+          label={'email'}
+          error={error || formik.errors}
+          formikFieldsProps={{ ...formik.getFieldProps('email') }}
+        />
+
+        {formik.touched.email && formik.errors.email ? (
+          <div className={style.registrationError}>{formik.errors.email}</div>
+        ) : null}
+
+        <CommonButton type={'submit'} name={'Send request'} />
       </form>
-      {status === 'loading' ? <div>Loading...</div> : ''}
-      {status === 'success' ? <div>We send message on your email</div> : ''}
-      {status === 'fail' ? <div>Email is not found</div> : ''}
     </div>
   );
 };
