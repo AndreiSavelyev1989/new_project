@@ -7,6 +7,8 @@ import {useFormik} from "formik";
 import CommonInput from "../../../common/c1-CommonInput/CommonInput";
 import CommonButton from "../../../common/c2-CommonButton/CommonButton";
 import style from "./../../../assets/style/Common.module.css";
+import CommonCheckbox from "../../../common/c3-CommonCheckbox/CommonCheckbox";
+import s from "./Login.module.css"
 
 type FormikErrorType = {
     email?: string
@@ -68,6 +70,13 @@ export const Login = () => {
                     formikFieldsProps={{...formik.getFieldProps("password")}}/>
                 {formik.touched.password && formik.errors.password ?
                     <div className={style.registrationError}>{formik.errors.password}</div> : null}
+
+                <div className={s.checkbox}>
+                    <CommonCheckbox
+                        type={"checkbox"}
+                        formikFieldsProps={{...formik.getFieldProps("rememberMe")}}/>
+
+                </div>
 
                 <CommonButton type={"submit"} name={"Login"}/>
             </form>
