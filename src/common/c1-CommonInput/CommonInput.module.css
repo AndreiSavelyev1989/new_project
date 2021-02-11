@@ -71,31 +71,6 @@
 .group input:focus ~ .bar:before, .group input:focus ~ .bar:after {
     width: 50%;
 }
-
-/*.barError:before, .barError:after {*/
-/*    content: '';*/
-/*    height: 2px;*/
-/*    width: 0;*/
-/*    bottom: 1px;*/
-/*    position: absolute;*/
-/*    background: #dd0d0d;*/
-/*    transition: 0.2s ease all;*/
-/*    -moz-transition: 0.2s ease all;*/
-/*    -webkit-transition: 0.2s ease all;*/
-/*}*/
-
-/*.barError:before {*/
-/*    left: 50%;*/
-/*}*/
-
-/*.barError:after {*/
-/*    right: 50%;*/
-/*}*/
-
-/*!* active state *!*/
-/*.group input:focus ~ .barError:before, .group input:focus ~ .barError:after {*/
-/*    width: 50%;*/
-/*}*/
 /* HIGHLIGHTER ================================== */
 .highlight {
     position: absolute;

@@ -62,7 +62,7 @@ export const Registration = () => {
     }
 
     return (
-        <div>
+        <div className={style.commonContainer}>
             <h1 className={style.title}>Registration</h1>
             <form className={style.formBlock} onSubmit={formik.handleSubmit}>
                 <div className={style.error}>{error ? error : null}</div>
@@ -70,7 +70,7 @@ export const Registration = () => {
                 <CommonInput
                     type={"text"}
                     label={"Email"}
-                    error={error || formik.errors}
+                    error={error || (formik.errors && formik.touched)}
                     formikFieldsProps={{...formik.getFieldProps("email")}}/>
 
                 {formik.touched.email && formik.errors.email ?
@@ -93,7 +93,7 @@ export const Registration = () => {
                 {formik.touched.passwordConfirm && formik.errors.passwordConfirm ?
                     <div className={style.registrationError}>{formik.errors.passwordConfirm}</div> : null}
 
-                <CommonButton type={"submit"} name={"sign up"}/>
+                <CommonButton type={"submit"} name={"Sign up"}/>
             </form>
         </div>
     )
