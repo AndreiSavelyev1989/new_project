@@ -7,6 +7,7 @@ type DefaultButtonPropsType = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonE
 type SuperButtonPropsType = DefaultButtonPropsType & {
     red?: boolean
     error?: string
+    name: string
 }
 
 const CommonButton: React.FC<SuperButtonPropsType> = (
@@ -16,13 +17,12 @@ const CommonButton: React.FC<SuperButtonPropsType> = (
         ...restProps// все остальные пропсы попадут в объект restProps, там же будет children
     }
 ) => {
-    const finalClassName = `${error ? s.red : s.default} ${className}`;
 
     return (
         <button
-            className={finalClassName}
+            className={s.default}
             {...restProps} // отдаём кнопке остальные пропсы если они есть (children там внутри)
-        />
+        >{restProps.name}</button>
     );
 }
 
