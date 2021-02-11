@@ -5,6 +5,8 @@
 }
 
 .group input {
+    opacity: 0.4;
+    background-color: darkgray;
     font-size: 18px;
     padding: 10px 10px 10px 5px;
     display: block;
@@ -19,7 +21,7 @@
 
 /* LABEL ======================================= */
 .group label {
-    color: #999;
+    color: #838383;
     font-size: 18px;
     font-weight: normal;
     position: absolute;

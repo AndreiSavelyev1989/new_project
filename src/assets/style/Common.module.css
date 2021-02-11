@@ -7,9 +7,16 @@
 }
 
 /*styles for all pages*/
+.commonContainer {
+    border: 1px solid #757575;
+    padding: 15px;
+}
+
 .title {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    color: #757575;
+    font-weight: 300;
 }
 
 .formBlock {
@@ -24,6 +31,7 @@
 }
 
 .registrationError, .error {
+    opacity: 0.8;
     color: red;
     padding: 5px;
     margin-bottom: 20px;
@@ -31,5 +39,6 @@
 
 .formBlock button {
     margin-top: 20px;
-    width: 100px;
+    width: 150px;
+
 }
