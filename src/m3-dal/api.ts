@@ -52,7 +52,7 @@ type LoginResponseType = ResponseLoginRegistrationType & LoginType
 
 export const loginApi = {
     login(data: LoginDataType) {
-        return instance.post<LoginResponseType>('/auth/login', data)
+        return instanceHeroku.post<LoginResponseType>('/auth/login', data)
     }
 }
 
@@ -63,7 +63,7 @@ export const restoreAPI = {
             from: 'dreamonaut@mail.ru',
             message: `<div style="background-color: lime; padding: 15px">
               password recovery link: 	
-              <a href='http://localhost:3000/#/new-password/$token$'>	
+              <a href='https://andreisavelyev1989.github.io/new_project/new_project/#/new-password/$token$'>	
               link</a></div>`,
         });
         return promise;
@@ -79,6 +79,6 @@ export const restoreAPI = {
 
 export const registrationAPI = {
     setRegistration(data: RegistrationParamsType) {
-        return instance.post<ResponseRegistrationType>("auth/register", data)
+        return instanceHeroku.post<ResponseRegistrationType>("auth/register", data)
     }
 }
