@@ -17,7 +17,7 @@ type FormikErrorType = {
 
 export const RestorePassword = () => {
   const dispatch = useDispatch();
-  const { error, currentEmail } = useSelector<
+  const { error, currentEmail, status } = useSelector<
     AppRootStateType,
     RestoreStateType
   >((state) => state.restore);
@@ -30,8 +30,8 @@ export const RestorePassword = () => {
   );
 
   useEffect(() => {
-    dispatch(initRestorePage);
-  });
+    dispatch(initRestorePage());
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -61,11 +61,10 @@ export const RestorePassword = () => {
   });
 
   return (
-    <div>
-      <h1 className={style.title}>Set new password</h1>
+    <div className={style.commonContainer}>
+      <h1 className={style.title}>Restore</h1>
       <form className={style.formBlock} onSubmit={formik.handleSubmit}>
-        <div className={style.error}>{error ? error : null}</div>
-
+        <div className={style.error}>{status && status}</div>
         <CommonInput
           type={'text'}
           label={'email'}
