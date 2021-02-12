@@ -4,7 +4,6 @@ import { restoreAPI } from '../../m3-dal/api';
 const SUCCESS_SUBMIT = 'restore/SUCCESS_SUBMIT';
 const FAILED_SUBMIT = 'restore/FAILED_SUBMIT';
 const LOADING = 'restore/LOADING';
-const SET_EMAIL = 'restore/SET_EMAIL';
 const CLEAR_STATUS = 'restore/CLEAR_STATUS';
 const INIT = 'restore/INIT';
 const SET_IS_PASSWORD_CHANGED = 'restore/SET_IS_PASSWORD_CHANGED';
@@ -18,11 +17,6 @@ type FailedSubmitType = {
   type: typeof FAILED_SUBMIT;
   error: string;
   status: string;
-};
-
-type SetEmailType = {
-  type: typeof SET_EMAIL;
-  email: string;
 };
 
 type ClearStatusType = {
@@ -44,7 +38,6 @@ type SetIsPasswordChangedType = {
 type ActionsType =
   | SuccessSubmitType
   | FailedSubmitType
-  | SetEmailType
   | ClearStatusType
   | LoadingType
   | InitType
@@ -69,11 +62,6 @@ export const failedSubmit = (
   type: FAILED_SUBMIT,
   error,
   status,
-});
-
-export const setEmail = (email: string): SetEmailType => ({
-  type: SET_EMAIL,
-  email,
 });
 
 export const clearStatus = (): ClearStatusType => ({
@@ -113,9 +101,6 @@ export const restoreReducer = (
     }
     case LOADING: {
       return { ...state, status: 'loading' };
-    }
-    case SET_EMAIL: {
-      return { ...state, currentEmail: action.email };
     }
     case CLEAR_STATUS: {
       return { ...state, status: null };
