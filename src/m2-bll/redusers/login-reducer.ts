@@ -33,10 +33,8 @@ type ActionLoginType = ReturnType<typeof isLogedInAC> | ReturnType<typeof setErr
 //thunk
 export const loginTC = (data: LoginDataType) => (dispatch: Dispatch) => {
     loginApi.login(data)
-        .then(res => {
-            if (res.data.email) {
+        .then(() => {
                 dispatch(isLogedInAC(true))
-            }
         })
         .catch(e => {
             const error = e.response
