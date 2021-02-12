@@ -3,14 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   RestoreStateType,
   setNewPassword,
-  initRestorePage
+  initRestorePage,
 } from '../../../m2-bll/redusers/restore-reducer';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import { AppRootStateType } from '../../../m2-bll/state/store';
 import { useFormik } from 'formik';
 import CommonButton from '../../../common/c2-CommonButton/CommonButton';
 import CommonInput from '../../../common/c1-CommonInput/CommonInput';
 import style from './../../../assets/style/Common.module.css';
+import { PATH } from '../../routes/Routes';
 
 type FormikErrorType = {
   passwordConfirm?: string;
@@ -20,13 +21,13 @@ type FormikErrorType = {
 export const NewPassword = () => {
   const dispatch = useDispatch();
   const { resetPasswordToken } = useParams<Record<string, string>>();
-  const { error } = useSelector<AppRootStateType, RestoreStateType>(
+  const { error, status, isPasswordChanged } = useSelector<AppRootStateType, RestoreStateType>(
     (state) => state.restore
   );
 
   useEffect(() => {
-    dispatch(initRestorePage);
-  })
+    dispatch(initRestorePage());
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -60,12 +61,14 @@ export const NewPassword = () => {
     },
   });
 
+  if (isPasswordChanged) {
+    return <Redirect to={PATH.LOGIN} />
+  }
   return (
-    <div>
+    <div className={style.commonContainer}>
       <h1 className={style.title}>Set new password</h1>
       <form className={style.formBlock} onSubmit={formik.handleSubmit}>
-        <div className={style.error}>{error ? error : null}</div>
-
+        <div className={style.error}>{status && status}</div>
         <CommonInput
           type={'password'}
           label={'Password'}
