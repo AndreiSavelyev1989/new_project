@@ -1,0 +1,7 @@
+.preloaderContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #3aa251;
+    text-transform: uppercase;
+}
