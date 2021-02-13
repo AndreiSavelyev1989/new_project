@@ -1,7 +1,7 @@
 import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../../m2-bll/state/store";
-import {loginTC} from "../../../m2-bll/redusers/login-reducer";
+import {initialStateType, loginTC} from "../../../m2-bll/redusers/auth-reducer";
 import {Redirect} from "react-router-dom";
 import {useFormik} from "formik";
 import CommonInput from "../../../common/c1-CommonInput/CommonInput";
@@ -9,6 +9,7 @@ import CommonButton from "../../../common/c2-CommonButton/CommonButton";
 import style from "./../../../assets/style/Common.module.css";
 import CommonCheckbox from "../../../common/c3-CommonCheckbox/CommonCheckbox";
 import s from "./Login.module.css"
+import {Preloader} from "../../preloader/Preloader";
 
 type FormikErrorType = {
     email?: string
@@ -18,8 +19,7 @@ type FormikErrorType = {
 
 export const Login = () => {
     const dispatch = useDispatch() //разобраться с useDispatch
-    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.login.isLoggedIn)
-    const error = useSelector<AppRootStateType, string | null>(state => state.login.error)
+    const {isFetching, error, isLoggedIn} = useSelector<AppRootStateType, initialStateType>(state => state.auth);
 
     const formik = useFormik({
         initialValues: {
@@ -77,10 +77,8 @@ export const Login = () => {
                         formikFieldsProps={{...formik.getFieldProps("rememberMe")}}/>
 
                 </div>
-
-                <CommonButton type={"submit"} name={"Login"}/>
+                {isFetching ? <Preloader/> : <CommonButton type={"submit"} name={"Login"}/>}
             </form>
-
         </div>
     )
 }

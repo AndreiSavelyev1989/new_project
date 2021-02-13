@@ -1,17 +1,18 @@
 import {Dispatch} from "redux";
 import {registrationAPI, RegistrationParamsType} from "../../m3-dal/api";
+import {setIsFetchingAC} from "./auth-reducer";
 
 const initialState = {
     isRegistered: false,
     error: null
 }
 
-type InitialStateType = {
+export type InitialStateType = {
     isRegistered: boolean
     error: null | string
 }
 
-export const registrationReducer = (state: InitialStateType = initialState, action: ActionsType) : InitialStateType => {
+export const registrationReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
         case "registration/SET-REGISTRATION":
             return {...state, isRegistered: action.value}
@@ -27,6 +28,7 @@ const setIsRegisteredAC = (value: boolean) => ({type: "registration/SET-REGISTRA
 const setErrorAC = (error: string | null) => ({type: "registration/SET-ERROR", error} as const)
 //thunks
 export const registrationTC = (data: RegistrationParamsType) => (dispatch: Dispatch<ActionsType>) => {
+    dispatch(setIsFetchingAC(true))
     registrationAPI.setRegistration(data)
         .then(res => {
             dispatch(setIsRegisteredAC(true))
@@ -38,8 +40,12 @@ export const registrationTC = (data: RegistrationParamsType) => (dispatch: Dispa
             console.log('Error: ', {...e})
             dispatch(setErrorAC(error))
         })
+        .finally(() => {
+            dispatch(setIsFetchingAC(false))
+        })
 }
 
 type ActionsType =
     | ReturnType<typeof setIsRegisteredAC>
     | ReturnType<typeof setErrorAC>
+    | ReturnType<typeof setIsFetchingAC>

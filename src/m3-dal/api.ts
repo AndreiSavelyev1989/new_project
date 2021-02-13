@@ -63,8 +63,8 @@ export const restoreAPI = {
             from: 'dreamonaut@mail.ru',
             message: `<div style="background-color: lime; padding: 15px">
               password recovery link: 	
-              <a href='https://andreisavelyev1989.github.io/new_project/new_project/#/new-password/$token$'>	
-              link</a></div>`,
+              <a href='http://localhost:3000/new_project/#/new-password/$token$'>	
+              Follow the link to set a new password</a></div>`,
         });
         return promise;
     },

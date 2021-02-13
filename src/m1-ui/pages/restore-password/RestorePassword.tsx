@@ -10,6 +10,7 @@ import { useFormik } from 'formik';
 import CommonButton from '../../../common/c2-CommonButton/CommonButton';
 import CommonInput from '../../../common/c1-CommonInput/CommonInput';
 import style from './../../../assets/style/Common.module.css';
+import {Preloader} from "../../preloader/Preloader";
 
 type FormikErrorType = {
   email?: string;
@@ -17,10 +18,8 @@ type FormikErrorType = {
 
 export const RestorePassword = () => {
   const dispatch = useDispatch();
-  const { error, currentEmail, status } = useSelector<
-    AppRootStateType,
-    RestoreStateType
-  >((state) => state.restore);
+  const { currentEmail, status } = useSelector<AppRootStateType, RestoreStateType>((state) => state.restore);
+  const isFetching = useSelector<AppRootStateType, boolean>(state => state.auth.isFetching);
 
   const submitRestorePassword = useCallback(
     (currentEmail) => {
@@ -67,16 +66,14 @@ export const RestorePassword = () => {
         <div className={style.error}>{status && status}</div>
         <CommonInput
           type={'text'}
-          label={'email'}
-          error={error || formik.errors}
+          label={'Email'}
           formikFieldsProps={{ ...formik.getFieldProps('email') }}
         />
 
         {formik.touched.email && formik.errors.email ? (
           <div className={style.registrationError}>{formik.errors.email}</div>
         ) : null}
-
-        <CommonButton type={'submit'} name={'Send request'} />
+        {isFetching ? <Preloader/> : <CommonButton type={'submit'} name={'Send request'} />}
       </form>
     </div>
   );
