@@ -50,9 +50,12 @@ type ResponseRegistrationType = ResponseLoginRegistrationType & RegistrationType
 type LoginResponseType = ResponseLoginRegistrationType & LoginType
 
 
-export const loginApi = {
+export const authApi = {
     login(data: LoginDataType) {
-        return instance.post<LoginResponseType>('/auth/login', data)
+        return instance.post<LoginResponseType>('auth/login', data)
+    },
+    me() {
+        return instance.post("auth/me", {})
     }
 }
 

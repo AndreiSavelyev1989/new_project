@@ -1,7 +1,7 @@
 import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../../m2-bll/state/store";
-import {loginTC} from "../../../m2-bll/redusers/login-reducer";
+import {loginTC} from "../../../m2-bll/redusers/auth-reducer";
 import {Redirect} from "react-router-dom";
 import {useFormik} from "formik";
 import CommonInput from "../../../common/c1-CommonInput/CommonInput";
@@ -18,8 +18,8 @@ type FormikErrorType = {
 
 export const Login = () => {
     const dispatch = useDispatch() //разобраться с useDispatch
-    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.login.isLoggedIn)
-    const error = useSelector<AppRootStateType, string | null>(state => state.login.error)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
+    const error = useSelector<AppRootStateType, string | null>(state => state.auth.error)
 
     const formik = useFormik({
         initialValues: {
@@ -40,7 +40,7 @@ export const Login = () => {
             } else if (values.password.length > 15) {
                 errors.password = 'Password must be 15 characters or less';
             } else if (values.password.length < 8) {
-                errors.password = 'Password must be more than 7 characters ';
+                errors.password = 'Password must be 8 characters or more ';
             }
             return errors;
         },
