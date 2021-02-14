@@ -1,122 +1,109 @@
-import { Dispatch } from 'redux';
-import {restoreAPI} from "../../m3-dal/api";
+import {Dispatch} from 'redux';
+import {restoreAPI} from '../../m3-dal/api';
+import {setIsFetchingAC} from "./auth-reducer";
 
-
-const SUCCESS_SUBMIT = 'SUCCESS_SUBMIT';
-const FAILED_SUBMIT = 'FAILED_SUBMIT';
-const LOADING = 'LOADING';
-const SET_EMAIL = 'SET_EMAIL';
-const CLEAR_STATUS = 'CLEAR_STATUS';
+const SUCCESS_SUBMIT = 'restore/SUCCESS_SUBMIT';
+const FAILED_SUBMIT = 'restore/FAILED_SUBMIT';
+const INIT = 'restore/INIT';
+const SET_IS_PASSWORD_CHANGED = 'restore/SET_IS_PASSWORD_CHANGED';
 
 type SuccessSubmitType = {
-  type: typeof SUCCESS_SUBMIT;
+    type: typeof SUCCESS_SUBMIT;
+    status: string;
 };
 
 type FailedSubmitType = {
-  type: typeof FAILED_SUBMIT;
-  error: string;
+    type: typeof FAILED_SUBMIT;
+    error: string;
+    status: string;
 };
 
-type SetEmailType = {
-  type: typeof SET_EMAIL;
-  email: string;
+type InitType = {
+    type: typeof INIT;
 };
 
-type ClearStatusType = {
-  type: typeof CLEAR_STATUS;
-};
-
-type LoadingType = {
-  type: typeof LOADING;
+type SetIsPasswordChangedType = {
+    type: typeof SET_IS_PASSWORD_CHANGED;
+    isPasswordChanged: boolean;
 };
 
 type ActionsType =
-  | SuccessSubmitType
-  | FailedSubmitType
-  | SetEmailType
-  | ClearStatusType
-  | LoadingType;
+    | SuccessSubmitType
+    | FailedSubmitType
+    | InitType
+    | SetIsPasswordChangedType;
 
 export type RestoreStateType = {
-  currentEmail: null | string;
-  error: null | string;
-  status: null | string;
+    currentEmail: null | string;
+    error: null | string;
+    status: null | string;
+    isPasswordChanged: boolean;
 };
 
-export const successSubmit = (): SuccessSubmitType => ({
-  type: SUCCESS_SUBMIT,
+export const successSubmit = (status: string): SuccessSubmitType => ({type: SUCCESS_SUBMIT, status,});
+export const failedSubmit = (error: string, status: string): FailedSubmitType => ({
+    type: FAILED_SUBMIT,
+    error,
+    status,
 });
-
-export const failedSubmit = (error: string): FailedSubmitType => ({
-  type: FAILED_SUBMIT,
-  error,
-});
-
-export const setEmail = (email: string): SetEmailType => ({
-  type: SET_EMAIL,
-  email,
-});
-
-export const clearStatus = (): ClearStatusType => ({
-  type: CLEAR_STATUS,
+export const initRestorePage = (): InitType => ({type: INIT,});
+export const setIsPasswordChanged = (isPasswordChanged: boolean): SetIsPasswordChangedType => ({
+    type: SET_IS_PASSWORD_CHANGED,
+    isPasswordChanged,
 });
 
 const initialState: RestoreStateType = {
-  currentEmail: null,
-  error: null,
-  status: null,
+    currentEmail: null,
+    error: null,
+    status: null,
+    isPasswordChanged: false,
 };
 
-export const restoreReducer = (
-  state: RestoreStateType = initialState,
-  action: ActionsType
-) => {
-  switch (action.type) {
-    case SUCCESS_SUBMIT: {
-      return { ...state, currentEmail: null, status: 'success' };
+export const restoreReducer = (state: RestoreStateType = initialState, action: ActionsType) => {
+    switch (action.type) {
+        case SUCCESS_SUBMIT: {
+            return {...state, currentEmail: null, status: action.status};
+        }
+        case FAILED_SUBMIT: {
+            return {
+                ...state,
+                currentEmail: null,
+                error: action.error,
+                status: action.status,
+            };
+        }
+        case INIT: {
+            return {...state, status: null, error: null};
+        }
+        case SET_IS_PASSWORD_CHANGED: {
+            return {...state, isPasswordChanged: action.isPasswordChanged};
+        }
+        default:
+            return state;
     }
-    case FAILED_SUBMIT: {
-      return {
-        ...state,
-        currentEmail: null,
-        error: action.error,
-        status: 'fail',
-      };
-    }
-    case LOADING: {
-      return { ...state, status: 'loading' };
-    }
-    case SET_EMAIL: {
-      return { ...state, currentEmail: action.email };
-    }
-    case CLEAR_STATUS: {
-      return { ...state, status: null };
-    }
-    default:
-      return state;
-  }
 };
 
-export const restorePassword = (email: string | null) => async (
-  dispatch: Dispatch
-) => {
-  try {
-    dispatch({ type: LOADING });
-    await restoreAPI.restorePassword(email);
-    dispatch(successSubmit());
-  } catch (e) {
-    dispatch(failedSubmit(e.response.data.error));
-  }
+export const restorePassword = (email: string | null) => async (dispatch: Dispatch) => {
+    try {
+        dispatch(setIsFetchingAC(true))
+        await restoreAPI.restorePassword(email);
+        dispatch(setIsFetchingAC(false))
+        dispatch(successSubmit('New password send to your email'));
+    } catch (e) {
+        dispatch(setIsFetchingAC(false))
+        dispatch(failedSubmit(e.response.data.error, 'Email not found'));
+    }
 };
 
-export const setNewPassword = (password: string, token: string) => async (
-  dispatch: Dispatch
-) => {
-  try {
-    dispatch({ type: LOADING });
-    await restoreAPI.setNewPassword(password, token);
-    dispatch(successSubmit());
-  } catch (e) {
-    dispatch(failedSubmit(e.response.data.error));
-  }
+export const setNewPassword = (password: string, token: string) => async (dispatch: Dispatch) => {
+    try {
+        dispatch(setIsFetchingAC(true))
+        await restoreAPI.setNewPassword(password, token);
+        dispatch(setIsFetchingAC(false))
+        dispatch(successSubmit('Password has been changed'));
+        setTimeout(() => dispatch(setIsPasswordChanged(true)), 3000);
+    } catch (e) {
+        dispatch(setIsFetchingAC(false))
+        dispatch(failedSubmit(e.response.data.error, 'Error'));
+    }
 };

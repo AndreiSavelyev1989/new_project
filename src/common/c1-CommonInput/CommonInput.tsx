@@ -1,4 +1,4 @@
-import React, {ChangeEvent, DetailedHTMLProps, InputHTMLAttributes, KeyboardEvent} from "react";
+import React, {DetailedHTMLProps, InputHTMLAttributes} from "react";
 import s from "./CommonInput.module.css";
 
 // тип пропсов обычного инпута

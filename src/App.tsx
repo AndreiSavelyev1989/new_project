@@ -4,7 +4,7 @@ import {Navbar} from "./m1-ui/navbar/Navbar";
 import {Routes} from "./m1-ui/routes/Routes";
 
 export const App = () => {
-  return (
+    return (
     <div className="App">
         <Navbar />
         <Routes />

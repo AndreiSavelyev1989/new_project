@@ -1,13 +1,14 @@
 import React from "react";
 import style from "./../../../assets/style/Common.module.css";
 import {useDispatch, useSelector} from "react-redux";
-import {registrationTC} from "../../../m2-bll/redusers/registration-reducer";
+import {InitialStateType, registrationTC} from "../../../m2-bll/redusers/registration-reducer";
 import {AppRootStateType} from "../../../m2-bll/state/store";
 import {Redirect} from "react-router-dom";
 import {PATH} from "../../routes/Routes";
 import {useFormik} from "formik";
 import CommonButton from "../../../common/c2-CommonButton/CommonButton";
 import CommonInput from "../../../common/c1-CommonInput/CommonInput";
+import {Preloader} from "../../preloader/Preloader";
 
 type FormikErrorType = {
     email?: string
@@ -16,8 +17,8 @@ type FormikErrorType = {
 }
 
 export const Registration = () => {
-    const isRegistered = useSelector<AppRootStateType, boolean>(state => state.registration.isRegistered)
-    const error = useSelector<AppRootStateType, string | null>(state => state.registration.error)
+    const {isRegistered, error} = useSelector<AppRootStateType, InitialStateType>(state => state.registration)
+    const isFetching = useSelector<AppRootStateType, boolean>(state => state.auth.isFetching)
     const dispatch = useDispatch();
 
     const formik = useFormik({
@@ -62,7 +63,7 @@ export const Registration = () => {
     }
 
     return (
-        <div>
+        <div className={style.commonContainer}>
             <h1 className={style.title}>Registration</h1>
             <form className={style.formBlock} onSubmit={formik.handleSubmit}>
                 <div className={style.error}>{error ? error : null}</div>
@@ -70,7 +71,7 @@ export const Registration = () => {
                 <CommonInput
                     type={"text"}
                     label={"Email"}
-                    error={error || formik.errors}
+                    error={error || (formik.errors && formik.touched)}
                     formikFieldsProps={{...formik.getFieldProps("email")}}/>
 
                 {formik.touched.email && formik.errors.email ?
@@ -93,7 +94,7 @@ export const Registration = () => {
                 {formik.touched.passwordConfirm && formik.errors.passwordConfirm ?
                     <div className={style.registrationError}>{formik.errors.passwordConfirm}</div> : null}
 
-                <CommonButton type={"submit"} name={"sign up"}/>
+                {isFetching ? <Preloader/> : <CommonButton type={"submit"} name={"Sign up"}/>}
             </form>
         </div>
     )
