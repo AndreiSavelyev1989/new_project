@@ -1,6 +1,6 @@
 .cbContainer {
-    display: flex;
-    align-items: flex-start;
+    display: inline-block;
+    /*align-items: flex-start;*/
     margin-bottom: 25px;
 
 }

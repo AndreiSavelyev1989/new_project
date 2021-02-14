@@ -40,7 +40,7 @@ export const Login = () => {
             } else if (values.password.length > 15) {
                 errors.password = 'Password must be 15 characters or less';
             } else if (values.password.length < 8) {
-                errors.password = 'Password must be more than 7 characters ';
+                errors.password = 'Password must be 8 characters or more ';
             }
             return errors;
         },
