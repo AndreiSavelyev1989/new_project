@@ -69,7 +69,7 @@ export const logoutTC = () => async (dispatch: Dispatch) => {
     try {
         dispatch(setIsFetchingAC(true));
         await authApi.logout();
-        dispatch(isLogedInAC(false ));
+        dispatch(isLogedInAC(false));
     } finally {
         dispatch(setIsFetchingAC(false));
     }
@@ -79,6 +79,7 @@ export const authMeTC = () => async (dispatch: Dispatch) => {
         dispatch(setIsFetchingAC(true));
         await authApi.me();
         dispatch(setIsInitialized(true));
+        dispatch(isLogedInAC(true));
     } finally {
         dispatch(setIsFetchingAC(false));
     }

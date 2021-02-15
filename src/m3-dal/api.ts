@@ -52,13 +52,13 @@ type LoginResponseType = ResponseLoginRegistrationType & LoginType
 
 export const authApi = {
     login(data: LoginDataType) {
-        return instance.post<LoginResponseType>('/auth/login', data)
+        return instanceHeroku.post<LoginResponseType>('/auth/login', data)
     },
     me () {
-        return instance.post("auth/me")
+        return instanceHeroku.post("auth/me")
     },
     logout() {
-        return instance.delete("auth/me")
+        return instanceHeroku.delete("auth/me")
     }
 }
 
@@ -85,6 +85,6 @@ export const restoreAPI = {
 
 export const registrationAPI = {
     setRegistration(data: RegistrationParamsType) {
-        return instance.post<ResponseRegistrationType>("auth/register", data)
+        return instanceHeroku.post<ResponseRegistrationType>("auth/register", data)
     }
 }
