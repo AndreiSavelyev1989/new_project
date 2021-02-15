@@ -17,16 +17,16 @@ const intialState: initialStateType = {
 //reducers
 export const authReducer = (state = intialState, action: ActionLoginType): initialStateType => {
     switch (action.type) {
-        case "login/SET-IS-LOGGED-IN": {
+        case "auth/SET-IS-LOGGED-IN": {
             return {...state, isLoggedIn: action.value}
         }
-        case "login/ERROR": {
+        case "auth/ERROR": {
             return {...state, error: action.error}
         }
         case "auth/INITIALIZED": {
             return {...state, isInitialized: action.isInitialized}
         }
-        case "login/SET-IS-FETCHING": {
+        case "auth/SET-IS-FETCHING": {
             return {...state, isFetching: action.isFetching}
         }
 
@@ -36,9 +36,9 @@ export const authReducer = (state = intialState, action: ActionLoginType): initi
 }
 //actions
 
-export const setErrorAC = (error: string | null) => ({type: "login/ERROR", error} as const)
-export const isLogedInAC = (value: boolean) => ({type: "login/SET-IS-LOGGED-IN", value} as const)
-export const setIsFetchingAC = (isFetching: boolean) => ({type: "login/SET-IS-FETCHING", isFetching} as const)
+export const setErrorAC = (error: string | null) => ({type: "auth/ERROR", error} as const)
+export const isLogedInAC = (value: boolean) => ({type: "auth/SET-IS-LOGGED-IN", value} as const)
+export const setIsFetchingAC = (isFetching: boolean) => ({type: "auth/SET-IS-FETCHING", isFetching} as const)
 export const setIsInitialized = (isInitialized: boolean) => ({type: 'auth/INITIALIZED', isInitialized} as const)
 
 type ActionLoginType =

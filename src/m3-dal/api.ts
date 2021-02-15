@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const instance = axios.create({
-    baseURL: "http://localhost:7542/2.0/",
-    withCredentials: true
-})
+// const instance = axios.create({
+//     baseURL: "http://localhost:7542/2.0/",
+//     withCredentials: true
+// })
 
 const instanceHeroku = axios.create(({
     withCredentials: true,
@@ -41,7 +41,7 @@ type ResponseLoginRegistrationType = {
 type RegistrationType = {
     __v: number
 }
- type LoginType = {
+type LoginType = {
     avatar?: string;
     error?: string;
 }
@@ -54,7 +54,7 @@ export const authApi = {
     login(data: LoginDataType) {
         return instanceHeroku.post<LoginResponseType>('/auth/login', data)
     },
-    me () {
+    me() {
         return instanceHeroku.post("auth/me")
     },
     logout() {
