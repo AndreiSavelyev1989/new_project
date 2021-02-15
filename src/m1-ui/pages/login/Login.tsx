@@ -19,7 +19,7 @@ type FormikErrorType = {
 
 export const Login = () => {
     const dispatch = useDispatch() //разобраться с useDispatch
-    const {isFetching, error, isLoggedIn} = useSelector<AppRootStateType, initialStateType>(state => state.auth);
+    const {isFetching, error, isLoggedIn, isInitialized} = useSelector<AppRootStateType, initialStateType>(state => state.auth);
 
     const formik = useFormik({
         initialValues: {
@@ -49,7 +49,7 @@ export const Login = () => {
             dispatch(loginTC(values))
         },
     })
-    if (isLoggedIn) {
+    if (isLoggedIn && isInitialized) {
         return <Redirect to={"/"}/>
     }
     return (
