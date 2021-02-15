@@ -45,31 +45,41 @@ type ActionLoginType =
     | ReturnType<typeof isLogedInAC>
     | ReturnType<typeof setErrorAC>
     | ReturnType<typeof setIsFetchingAC>
-    | ReturnType<typeof setIsInitialized>                              
+    | ReturnType<typeof setIsInitialized>
 
 //thunk
-export const loginTC = (data: LoginDataType) => (dispatch: Dispatch) => {
-  dispatch(setIsFetchingAC(true))
-    authApi.login(data)
-        .then(() => {
-            dispatch(isLogedInAC(true))
-           })
-        .catch(e => {
-            const error = e.response
-                ? e.response.data.error
-                : (e.message + ', more details in the console');
-            dispatch(setErrorAC(error))
-            console.log('Error: ', {...e})
-            return console.log(error)
-        })
-        .finally(() => {
-            dispatch(setIsFetchingAC(false))
-        })
+export const loginTC = (data: LoginDataType) => async (dispatch: Dispatch) => {
+    try {
+        dispatch(setIsFetchingAC(true))
+        await authApi.login(data);
+        dispatch(isLogedInAC(true))
+    } catch (e) {
+        const error = e.response
+            ? e.response.data.error
+            : (e.message + ', more details in the console');
+        dispatch(setErrorAC(error))
+        console.log('Error: ', {...e})
+        return console.log(error)
+    } finally {
+        dispatch(setIsFetchingAC(false))
+    }
 }
 
-export const authMeTC = () => (dispatch: Dispatch) => {
-    authApi.me()
-        .then( (res) => {
-                dispatch(setIsInitialized(true))
-        })
+export const logoutTC = () => async (dispatch: Dispatch) => {
+    try {
+        dispatch(setIsFetchingAC(true));
+        await authApi.logout();
+        dispatch(isLogedInAC(false ));
+    } finally {
+        dispatch(setIsFetchingAC(false));
+    }
+}
+export const authMeTC = () => async (dispatch: Dispatch) => {
+    try {
+        dispatch(setIsFetchingAC(true));
+        await authApi.me();
+        dispatch(setIsInitialized(true));
+    } finally {
+        dispatch(setIsFetchingAC(false));
+    }
 }

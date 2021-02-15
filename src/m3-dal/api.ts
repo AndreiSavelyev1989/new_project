@@ -1,9 +1,9 @@
 import axios from "axios";
 
-// const instance = axios.create({
-//     baseURL: "http://localhost:7542/2.0/",
-//     withCredentials: true
-// })
+const instance = axios.create({
+    baseURL: "http://localhost:7542/2.0/",
+    withCredentials: true
+})
 
 const instanceHeroku = axios.create(({
     withCredentials: true,
@@ -52,10 +52,13 @@ type LoginResponseType = ResponseLoginRegistrationType & LoginType
 
 export const authApi = {
     login(data: LoginDataType) {
-        return instanceHeroku.post<LoginResponseType>('/auth/login', data)
+        return instance.post<LoginResponseType>('/auth/login', data)
     },
-    me() {
-        return instanceHeroku.post("auth/me", {})
+    me () {
+        return instance.post("auth/me")
+    },
+    logout() {
+        return instance.delete("auth/me")
     }
 }
 
@@ -82,6 +85,6 @@ export const restoreAPI = {
 
 export const registrationAPI = {
     setRegistration(data: RegistrationParamsType) {
-        return instanceHeroku.post<ResponseRegistrationType>("auth/register", data)
+        return instance.post<ResponseRegistrationType>("auth/register", data)
     }
 }
