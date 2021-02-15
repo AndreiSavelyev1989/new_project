@@ -24,7 +24,8 @@ export const authReducer = (state = intialState, action: ActionLoginType): initi
             return {...state, error: action.error}
         }
         case "auth/INITIALIZED": {
-            return {...state, isInitialized:action.isInitialized}
+            return {...state, isInitialized: action.isInitialized}
+        }
         case "login/SET-IS-FETCHING": {
             return {...state, isFetching: action.isFetching}
         }

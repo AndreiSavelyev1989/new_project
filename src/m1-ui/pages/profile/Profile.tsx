@@ -17,11 +17,11 @@ export const Profile = () => {
             if (!isInitialized){
                 dispatch(authMeTC())
                 console.log(isFirstRendering,isInitialized)
+                setIsFirstRendering(false)
             }
-            setIsFirstRendering(false)
         }
 
-    },[isFirstRendering,isInitialized])
+    },[isFirstRendering, setIsFirstRendering])
     //добавит && !isLoading
     if (!isInitialized && !isFirstRendering){
         console.log(isFirstRendering,isInitialized)
