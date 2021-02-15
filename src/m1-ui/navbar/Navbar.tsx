@@ -11,6 +11,7 @@ export const Navbar = () => {
             <NavLink to={PATH.RESTORE_PASSWORD} activeClassName={style.active}>Restore password</NavLink>
             <NavLink to={PATH.NEW_PASSWORD} activeClassName={style.active}>New password</NavLink>
             <NavLink to={PATH.LOGIN} activeClassName={style.active}>Login</NavLink>
+            <NavLink to={PATH.PACKS} activeClassName={style.active}>Packs</NavLink>
             <NavLink to={PATH.TEST} activeClassName={style.active}>Test</NavLink>
         </div>
     )

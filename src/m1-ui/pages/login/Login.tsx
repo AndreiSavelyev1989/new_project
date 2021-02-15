@@ -51,7 +51,7 @@ export const Login = () => {
         },
     })
     if (isLoggedIn) {
-        console.log(isLoggedIn,isInitialized)
+        console.log(isLoggedIn, isInitialized)
         return <Redirect to={"/"}/>
     }
     return (

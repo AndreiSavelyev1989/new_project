@@ -8,6 +8,7 @@ import {RestorePassword} from "../pages/restore-password/RestorePassword";
 import {Test} from "../pages/test/Test";
 import {Error404} from "../pages/error404/Error404";
 import style from "../../assets/style/Common.module.css"
+import {Packs} from "../pages/packs/Packs";
 
 export const PATH = {
     LOGIN: "/login",
@@ -15,7 +16,8 @@ export const PATH = {
     PROFILE: "/profile",
     REGISTRATION: "/registration",
     RESTORE_PASSWORD: "/restore-password",
-    TEST: "/test"
+    TEST: "/test",
+    PACKS: "/packs"
 }
 
 export const Routes = () => {
@@ -29,6 +31,7 @@ export const Routes = () => {
                 <Route path={PATH.REGISTRATION} render={() => <Registration/>}/>
                 <Route path={PATH.RESTORE_PASSWORD} render={() => <RestorePassword/>}/>
                 <Route path={PATH.TEST} render={() => <Test/>}/>
+                <Route path={PATH.PACKS} render={() => <Packs/>}/>
                 <Route render={() => <Error404/>}/>
             </Switch>
         </div>
