@@ -1,7 +1,7 @@
 import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../../m2-bll/state/store";
-import {initialStateType, loginTC} from "../../../m2-bll/redusers/auth-reducer";
+import {initialStateType, isLogedInAC, loginTC} from "../../../m2-bll/redusers/auth-reducer";
 import {Redirect} from "react-router-dom";
 import {useFormik} from "formik";
 import CommonInput from "../../../common/c1-CommonInput/CommonInput";
@@ -47,9 +47,11 @@ export const Login = () => {
 
         onSubmit: values => {
             dispatch(loginTC(values))
+
         },
     })
-    if (isLoggedIn && isInitialized) {
+    if (isLoggedIn || isInitialized) {
+        console.log(isLoggedIn,isInitialized)
         return <Redirect to={"/"}/>
     }
     return (
