@@ -14,7 +14,7 @@ export const Packs = () => {
                     <button>add</button>
                 </div>
             </div>
-        {/*    mapped packs*/}
+        {/* mapped packs*/}
         </div>
     )
 }
