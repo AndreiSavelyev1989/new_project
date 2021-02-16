@@ -1,0 +1,10 @@
+.table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+.table__cell {
+    border: 2px solid;
+    justify-content: center;
+    padding: 10px;
+    width: 17%;
+}
