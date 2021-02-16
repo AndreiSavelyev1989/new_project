@@ -15,10 +15,10 @@ const instanceHeroku = axios.create(({
 //Cards Api
 export const cardsPackAPI = {
     getPacks() {
-        return instanceHeroku.get<GetPacksResponseType>('/cards/pack')
+        return instanceHeroku.get<GetPacksResponseType>('cards/pack')
     },
     createPack(cardsPack:CardPacksType) {
-        return instanceHeroku.post('/cards/pack',cardsPack)
+        return instanceHeroku.post('cards/pack', cardsPack)
     },
 
 }

@@ -10,7 +10,7 @@ const initialState = {
 //types
 export type CardsPackInitialStateType = typeof initialState
 export type CardPacksType = {
-    _id: string
+    _id?: string
     user_id?: string
     user_name?: string
     private?: boolean
@@ -19,7 +19,7 @@ export type CardPacksType = {
     grade?: number
     shots?: number
     cardsCount?: number | undefined
-    type: string
+    type?: string
     rating?: number
     created?: string | undefined
     updated?: string
@@ -64,11 +64,11 @@ export const getPacks = () => async (dispatch: Dispatch) => {
         return console.log(error)
     }
 };
+
 export const createNewPack = (cardPack: CardPacksType) => async (dispatch: Dispatch) => {
     try {
         await cardsPackAPI.createPack(cardPack)
         dispatch(createCardsPackAC(cardPack))
-
     } catch (e) {
         const error = e.response
             ? e.response.data.error
