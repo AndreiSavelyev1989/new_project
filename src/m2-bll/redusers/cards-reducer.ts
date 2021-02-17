@@ -1,7 +1,32 @@
+import { Dispatch } from 'redux';
 import { cardsAPI } from '../../m3-dal/apiJS';
 
+type CardType = {
+  answer: string;
+  question: string;
+  cardsPack_id: string;
+  grade: number;
+  rating: number;
+  shots: number;
+  type: string;
+  user_id: string;
+  created: string;
+  updated: string;
+  __v: number;
+  _id: string;
+};
+
+type OptionsType = {
+  cardsTotalCount: number;
+  maxGrade: number;
+  minGrade: number;
+  page: number;
+  pageCount: number;
+  packUserId: string;
+};
+
 const initialState = {
-  cards: [],
+  cards: [] as CardType[],
   options: {
     page: '',
     pageCount: '',
@@ -20,7 +45,9 @@ export const cardsReducer = (state = initialState, action) => {
   }
 };
 
-export const getCardsByPackId = (cardPackId) => (dispatch) => {
+export const getCardsByPackId = (cardPackId: string) => (
+  dispatch: Dispatch
+) => {
   try {
     cardsAPI.getCards().then((res) => {
       dispatch({
@@ -33,7 +60,7 @@ export const getCardsByPackId = (cardPackId) => (dispatch) => {
   }
 };
 
-export const delCard = (cardId) => (dispatch) => {
+export const delCard = (cardId: string) => (dispatch: Dispatch) => {
   try {
     cardsAPI.delCard(cardId).then(() => {
       dispatch(getCardsByPackId());
@@ -43,7 +70,7 @@ export const delCard = (cardId) => (dispatch) => {
   }
 };
 
-export const addCard = (cardPackId) => (dispatch) => {
+export const addCard = (cardPackId: string) => (dispatch: Dispatch) => {
   try {
     cardsAPI.addCard().then(() => {
       dispatch(getCardsByPackId());
