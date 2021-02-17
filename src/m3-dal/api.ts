@@ -18,12 +18,12 @@ export const cardsPackAPI = {
         return instanceHeroku.get<GetPacksResponseType>('cards/pack')
     },
     createPack(cardsPack:CardPacksType) {
-        return instanceHeroku.post('cards/pack', cardsPack)
+        return instanceHeroku.post('cards/pack', {cardsPack: {...cardsPack}})
     },
 
 }
 //Packs Type
-type GetPacksResponseType = {
+export type GetPacksResponseType = {
     cardPacks: CardPacksType[],
     page: number,
     pageCount: number,
