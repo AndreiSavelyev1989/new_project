@@ -6,10 +6,13 @@ import {PATH} from '../../routes/Routes';
 import {authMeTC, initialStateType, logoutTC} from '../../../m2-bll/redusers/auth-reducer';
 import CommonButton from '../../../common/c2-CommonButton/CommonButton';
 
+
+
 export const Profile = () => {
     const dispatch = useDispatch();
     const {isInitialized, isLoggedIn} = useSelector<AppRootStateType,
         initialStateType>((state) => state.auth);
+
 
     useEffect(() => {
         if (!isInitialized) {
@@ -17,7 +20,6 @@ export const Profile = () => {
         }
     }, []);
     //добавит && !isLoading
-
     const logoutCallBack = () => {
         dispatch(logoutTC());
     };
