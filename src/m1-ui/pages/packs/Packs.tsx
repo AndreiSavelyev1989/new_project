@@ -13,17 +13,21 @@ export const Packs = () => {
         dispatch(getPacks())
     }, [])
 
-    const mappedCards = cards.map(c => <Pack
-        key={c._id}
-        name={c.name}
-        cardsCount={c.cardsCount}
-        updated={c.updated}
-        url={c.user_name}
-    />)
+    const mappedCards = cards.map(c => {
+        console.log(c._id)
+      return  <Pack
+            key={c._id}
+            name={c.name}
+            cardsCount={c.cardsCount}
+            updated={c.updated}
+            url={c.user_name}
+        />
+    })
 
     const onAddCardPackHandler = () => {
         dispatch(createNewPack({
             name: "new hardcode pack"
+
         }))
     }
 

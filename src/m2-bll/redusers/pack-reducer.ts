@@ -29,20 +29,16 @@ export type CardPacksType = {
 
 //actions
 export const setCardsPacksAC = (setPack: CardPacksType[]) => ({type: 'pack/SET-PACKS', setPack} as const)
-export const createCardsPackAC = (newPack: CardPacksType) => ({type: 'pack/CREATE-PACKS', newPack} as const)
+
 
 type ActionPacksType =
     | ReturnType<typeof setCardsPacksAC>
-    | ReturnType<typeof createCardsPackAC>
 
 //reducers
 export const cardPackReducer = (state = initialState, action: ActionPacksType): CardsPackInitialStateType => {
     switch (action.type) {
         case "pack/SET-PACKS": {
             return {...state, cardsPack: action.setPack}
-        }
-        case "pack/CREATE-PACKS": {
-            return {...state, cardsPack: [action.newPack, ...state.cardsPack]}
         }
         default:
             return state
@@ -68,7 +64,9 @@ export const getPacks = () => async (dispatch: Dispatch) => {
 export const createNewPack = (cardPack: CardPacksType) => async (dispatch: Dispatch) => {
     try {
         await cardsPackAPI.createPack(cardPack)
-        dispatch(createCardsPackAC(cardPack))
+        //@ts-ignore
+        dispatch(getPacks())
+
     } catch (e) {
         const error = e.response
             ? e.response.data.error
