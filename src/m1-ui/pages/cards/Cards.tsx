@@ -16,6 +16,9 @@ export const Cards = () => {
 
   useEffect(() => {
     dispatch(getCardsByPackId());
+    cardsAPI.addPack().then((res) => {
+      console.log(res);
+    })
   }, []);
   console.log(cards);
 
