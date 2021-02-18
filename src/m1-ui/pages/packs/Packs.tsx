@@ -15,7 +15,7 @@ export const Packs = () => {
 
     const mappedCards = cards.map(c => {
         console.log(c._id)
-      return  <Pack
+        return <Pack
             key={c._id}
             name={c.name}
             cardsCount={c.cardsCount}
@@ -27,7 +27,6 @@ export const Packs = () => {
     const onAddCardPackHandler = () => {
         dispatch(createNewPack({
             name: "new hardcode pack"
-
         }))
     }
 
