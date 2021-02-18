@@ -46,10 +46,14 @@ export const authApi = {
     me() {
         return instanceHeroku.post("auth/me")
     },
+    updateMe(name: string, avatar: string){
+       return instanceHeroku.put("auth/me", {name, avatar})
+    },
     logout() {
         return instanceHeroku.delete("auth/me")
     }
 }
+
 export const restoreAPI = {
     restorePassword: async (email: string | null) => {
         const promise = await instanceHeroku.post<ResponseRestoreType>('auth/forgot', {
@@ -86,7 +90,10 @@ export type LoginDataType = {
     password: string
     rememberMe?: boolean
 }
-
+// export type UpdateUserDataType = {
+//     name: string
+//     avatar: string
+// }
 //Response types
 type ResponseRestoreType = {
     info: string,
@@ -94,15 +101,15 @@ type ResponseRestoreType = {
 };
 
 type ResponseLoginRegistrationType = {
-    email: string
-    created: string
-    isAdmin: boolean
+    email?: string
+    created?: string
+    isAdmin?: boolean
     name: string
-    publicCardPacksCount: number
-    rememberMe: boolean
-    updated: string
-    verified: boolean
-    _id: string
+    publicCardPacksCount?: number
+    rememberMe?: boolean
+    updated?: string
+    verified?: boolean
+    _id?: string
 }
 type RegistrationType = {
     __v: number
@@ -113,7 +120,9 @@ type LoginType = {
 }
 
 type ResponseRegistrationType = ResponseLoginRegistrationType & RegistrationType
-type LoginResponseType = ResponseLoginRegistrationType & LoginType
+
+export type LoginResponseType = ResponseLoginRegistrationType & LoginType
+
 
 
 //Cards API
@@ -173,3 +182,4 @@ type ResponseCardOptionsType = {
     pageCount: number;
     packUserId: string;
   };
+

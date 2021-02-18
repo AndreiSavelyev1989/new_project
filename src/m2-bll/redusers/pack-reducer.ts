@@ -1,5 +1,5 @@
-import {Dispatch} from "redux";
 import {cardsPackAPI} from "../../m3-dal/api";
+import {setErrorAC} from "./auth-reducer";
 import {ActionLoginType, setErrorAC} from "./auth-reducer";
 import {ThunkAction} from "redux-thunk";
 import {AppRootStateType} from "../state/store";
@@ -36,7 +36,9 @@ export const setCardsPacksAC = (setPack: CardPacksType[]) => ({type: 'pack/SET-P
 type ActionPacksType =
     |ActionLoginType
     | ReturnType<typeof setCardsPacksAC>
+    | ReturnType<typeof setErrorAC>
 
+type ThunkPacksType = ThunkAction<void, AppRootStateType, unknown, ActionPacksType>
 //reducers
 export const cardPackReducer = (state = initialState, action: ActionPacksType): CardsPackInitialStateType => {
     switch (action.type) {
@@ -49,9 +51,9 @@ export const cardPackReducer = (state = initialState, action: ActionPacksType): 
 }
 
 //thunks
-type ThunkCardType = ThunkAction<void, AppRootStateType, unknown, ActionLoginType>
 
-export const getPacks = () => async (dispatch: Dispatch) => {
+export const getPacks = ():ThunkPacksType  => async (dispatch) => {
+
     try {
         const res = await cardsPackAPI.getPacks()
         dispatch(setCardsPacksAC(res.data.cardPacks))
@@ -66,11 +68,11 @@ export const getPacks = () => async (dispatch: Dispatch) => {
     }
 };
 
-export const createNewPack = (cardPack: CardPacksType):ThunkCardType => async (dispatch) => {
+
+export const createNewPack = (cardPack: CardPacksType): ThunkPacksType => async (dispatch) => {
     try {
         await cardsPackAPI.createPack(cardPack)
-        await dispatch(getPacks())
-
+        dispatch(getPacks())
     } catch (e) {
         const error = e.response
             ? e.response.data.error
@@ -81,7 +83,7 @@ export const createNewPack = (cardPack: CardPacksType):ThunkCardType => async (d
     }
 }
 
-export const deleteCardPack = (id:string):ThunkCardType => async (dispatch) => {
+export const deleteCardPack = (id:string):ThunkPacksType => async (dispatch) => {
     try {
         await cardsPackAPI.deletePack(id)
         await dispatch(getPacks())

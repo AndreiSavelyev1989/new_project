@@ -1,0 +1,7 @@
+.profileBlock {
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+    justify-content: space-around;
+    align-items: center;
+}
