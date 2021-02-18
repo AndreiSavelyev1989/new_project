@@ -33,9 +33,12 @@ export const Pack: React.FC<PropsType> = (props) => {
                 <div className={s.tableItem}>{props.updated}</div>
                 <div className={s.tableItem}>{props.url}</div>
                 <div className={s.tableItem}>
+                    <button onClick={onDeleteCardPackHandler}>del</button>
                 </div>
-                <button onClick={onDeleteCardPackHandler}>del</button>
-                <NavLink to={PATH.CARDS + '/' + props.id}>CARDS</NavLink>
+                <div className={s.tableItem}>
+                    <NavLink to={PATH.CARDS + '/' + props.id}>CARDS</NavLink>
+                </div>
+
             </div>
         </div>
     )

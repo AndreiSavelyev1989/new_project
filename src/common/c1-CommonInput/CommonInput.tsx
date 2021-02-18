@@ -1,4 +1,4 @@
-import React, {DetailedHTMLProps, InputHTMLAttributes} from "react";
+import React, {ChangeEvent, DetailedHTMLProps, InputHTMLAttributes} from "react";
 import s from "./CommonInput.module.css";
 
 // тип пропсов обычного инпута
@@ -10,6 +10,9 @@ type SuperInputTextPropsType = DefaultInputPropsType & { // и + ещё проп
     label?: string
     formikFieldsProps?: any
     error?: any
+    onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+    onBlur?: () => void
+    value?: any
 };
 
 const CommonInput: React.FC<SuperInputTextPropsType> = (
@@ -18,6 +21,9 @@ const CommonInput: React.FC<SuperInputTextPropsType> = (
         formikFieldsProps,
         label,
         error,
+        onChange,
+        onBlur,
+        value,
         ...restProps// все остальные пропсы попадут в объект restProps
     }
 ) => {
@@ -28,6 +34,10 @@ const CommonInput: React.FC<SuperInputTextPropsType> = (
                 <input
                     type={type}
                     {...formikFieldsProps}
+                    // onChange={onChange}
+                    // onBlur={onBlur}
+                    // value={value}
+                    // autoFocus
                     required
                 />
                 <span className={s.highlight}> </span>

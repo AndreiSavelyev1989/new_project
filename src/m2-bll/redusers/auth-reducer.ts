@@ -63,7 +63,6 @@ export const setIsFetchingAC = (isFetching: boolean) => ({type: "auth/SET-IS-FET
 export const setIsInitialized = (isInitialized: boolean) => ({type: 'auth/INITIALIZED', isInitialized} as const)
 export const setUserData = (name: string, avatar: string) => ({type: 'auth/SET-USER-DATA', name, avatar} as const)
 
-
 export type ActionLoginType =
     | ReturnType<typeof isLogedInAC>
     | ReturnType<typeof setErrorAC>
@@ -114,6 +113,7 @@ export const authMeTC = (): ThunkAuthType => async (dispatch, getState) => {
 
 export const updateMeDataTC = (name: string, avatar: string): ThunkAuthType => async (dispatch, getState) => {
     try {
+        dispatch(setIsFetchingAC(true));
         const res = await authApi.updateMe(name, avatar)
         dispatch(setUserData(res.data.updatedUser.name, res.data.updatedUser.avatar))
     } catch (e) {
@@ -123,5 +123,8 @@ export const updateMeDataTC = (name: string, avatar: string): ThunkAuthType => a
         dispatch(setErrorAC(error))
         console.log('Error: ', {...e})
         return console.log(error)
+    }
+    finally {
+        dispatch(setIsFetchingAC(false));
     }
 }
