@@ -1,7 +1,11 @@
 import { Dispatch } from 'redux';
+import { ThunkAction } from 'redux-thunk';
 import { cardsAPI } from '../../m3-dal/api';
+import { AppRootStateType } from '../state/store';
+import { setIsFetchingAC } from './auth-reducer';
 
-const GET_CARDS = 'cards/GET_CARDS';
+const GET_CARDS = 'cards/GET-CARDS';
+const SET_IS_FETCHING = 'cards/SET-IS-FETCHING';
 
 type GetCardsType = {
   type: typeof GET_CARDS;
@@ -20,12 +24,22 @@ type CardsType = {
   pageCount?: number;
 };
 
-type ActionsType = GetCardsType;
+type SetIsFetchingCardsType = {
+  type: typeof SET_IS_FETCHING;
+};
+
+type ActionsType = GetCardsType | SetIsFetchingCardsType;
 
 type StateType = {
   cards: Array<CardsType> | [];
-  options: any;
+  options: {};
+  isFetching: boolean;
 };
+
+type ThunkCardType = ThunkAction<void, AppRootStateType, unknown, ActionsType>;
+
+export const setIsFetchingCardsAC = () =>
+  ({ type: 'cards/SET-IS-FETCHING' } as const);
 
 export const GetCards = (
   packId: string,
@@ -39,6 +53,7 @@ export const GetCards = (
 const initialState = {
   cards: [],
   options: {},
+  isFetching: false,
 };
 
 export const cardsReducer = (
@@ -46,8 +61,11 @@ export const cardsReducer = (
   action: ActionsType
 ) => {
   switch (action.type) {
-    case 'cards/GET_CARDS': {
+    case GET_CARDS: {
       return { ...state, cards: [...action.cards] };
+    }
+    case SET_IS_FETCHING: {
+      return { ...state, isFetching: !state.isFetching };
     }
     default:
       return state;
@@ -58,20 +76,21 @@ export const getCardsByPackId = (cardsPackId: string) => (
   dispatch: Dispatch
 ) => {
   try {
+    dispatch(setIsFetchingCardsAC());
     cardsAPI.getCards(cardsPackId).then((res) => {
       dispatch(GetCards(cardsPackId, res.data.cards));
+      dispatch(setIsFetchingCardsAC());
     });
   } catch (e) {
     console.log(e);
   }
 };
 
-export const delCard = (cardId: string, cardsPackId: string) => (
-  dispatch: Dispatch
+export const delCard = (cardId: string, cardsPackId: string): ThunkCardType => (
+  dispatch
 ) => {
   try {
     cardsAPI.delCard(cardId).then(() => {
-      //@ts-ignore
       dispatch(getCardsByPackId(cardsPackId));
     });
   } catch (e) {
@@ -79,10 +98,9 @@ export const delCard = (cardId: string, cardsPackId: string) => (
   }
 };
 
-export const addCard = (cardsPackId: string) => (dispatch: Dispatch) => {
+export const addCard = (cardsPackId: string): ThunkCardType => (dispatch) => {
   try {
     cardsAPI.addCard(cardsPackId).then(() => {
-      //@ts-ignore
       dispatch(getCardsByPackId(cardsPackId));
     });
   } catch (e) {
@@ -90,11 +108,12 @@ export const addCard = (cardsPackId: string) => (dispatch: Dispatch) => {
   }
 };
 
-
-export const updateCard = (cardId: string, cardsPackId: string) => (dispatch: Dispatch) => {
+export const updateCard = (
+  cardId: string,
+  cardsPackId: string
+): ThunkCardType => (dispatch) => {
   try {
     cardsAPI.updateCard(cardId).then(() => {
-      //@ts-ignore
       dispatch(getCardsByPackId(cardsPackId));
     });
   } catch (e) {
