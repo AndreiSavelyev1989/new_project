@@ -1,14 +1,30 @@
-import React from "react";
+import React, {useEffect} from "react";
 import s from "../Packs.module.css";
+import {NavLink} from "react-router-dom";
+import {PATH} from "../../../routes/Routes";
+import {useDispatch, useSelector} from "react-redux";
+import {deleteCardPack, getPacks} from "../../../../m2-bll/redusers/pack-reducer";
+
 
 type PropsType = {
     name: string
     cardsCount: number | undefined
     updated: string | undefined
     url: string | undefined
+    id: string | undefined
 }
 
+
 export const Pack: React.FC<PropsType> = (props) => {
+    const dispatch = useDispatch()
+
+
+    const onDeleteCardPackHandler = () => {
+        if (props.id) {
+            dispatch(deleteCardPack(props.id))
+        }
+    }
+
     return (
         <div className={s.table}>
             <div className={s.tableContainer}>
@@ -17,8 +33,9 @@ export const Pack: React.FC<PropsType> = (props) => {
                 <div className={s.tableItem}>{props.updated}</div>
                 <div className={s.tableItem}>{props.url}</div>
                 <div className={s.tableItem}>
-                    some buttons
                 </div>
+                <button onClick={onDeleteCardPackHandler}>del</button>
+                <NavLink to={PATH.CARDS + '/' + props.id}>CARDS</NavLink>
             </div>
         </div>
     )

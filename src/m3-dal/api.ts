@@ -20,6 +20,9 @@ export const cardsPackAPI = {
     createPack(cardsPack:CardPacksType) {
         return instanceHeroku.post('cards/pack', {cardsPack: {...cardsPack}})
     },
+    deletePack(id:string) {
+        return instanceHeroku.delete(`cards/pack?id=${id}`)
+    }
 
 }
 //Packs Type
@@ -117,4 +120,66 @@ type LoginType = {
 }
 
 type ResponseRegistrationType = ResponseLoginRegistrationType & RegistrationType
+
 export type LoginResponseType = ResponseLoginRegistrationType & LoginType
+
+
+
+//Cards API
+export const cardsAPI = {
+    getCards: async (cardsPackId: string) => {
+      return instanceHeroku.get(
+        `cards/card?cardsPack_id=${cardsPackId}`
+      );
+    },
+    addCard: async (cardsPackId: string) => {
+      return instanceHeroku.post('cards/card', {
+        card: {
+          cardsPack_id: `${cardsPackId}`,
+        },
+      });
+    },
+    delCard: async (cardId: string) => {
+      return instanceHeroku.delete(`cards/card?id=${cardId}`);
+    },
+    updateCard: async (cardId: string) => {
+      return instanceHeroku.put('cards/card', {
+        card: {
+          _id: `${cardId}`,
+          question: 'Updated',
+          comments: 'Updated'
+        },
+      });
+    },
+    addPack: async () => {
+      return instanceHeroku.post('/cards/pack', {
+        cardsPack: {},
+      });
+    },
+  };
+  
+
+type ResponseCardType = {
+    answer: string;
+    question: string;
+    cardsPack_id: string;
+    grade: number;
+    rating: number;
+    shots: number;
+    type: string;
+    user_id: string;
+    created: string;
+    updated: string;
+    __v: number;
+    _id: string;
+  };
+  
+type ResponseCardOptionsType = {
+    cardsTotalCount: number;
+    maxGrade: number;
+    minGrade: number;
+    page: number;
+    pageCount: number;
+    packUserId: string;
+  };
+

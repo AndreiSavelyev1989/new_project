@@ -21,6 +21,7 @@ export const Packs = () => {
             cardsCount={c.cardsCount}
             updated={c.updated}
             url={c.user_name}
+            id={c._id}
         />
     })
 

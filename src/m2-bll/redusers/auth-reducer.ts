@@ -63,7 +63,7 @@ export const setIsInitialized = (isInitialized: boolean) => ({type: 'auth/INITIA
 export const setUserData = (name: string, avatar: string) => ({type: 'auth/SET-USER-DATA', name, avatar} as const)
 
 
-type ActionLoginType =
+export type ActionLoginType =
     | ReturnType<typeof isLogedInAC>
     | ReturnType<typeof setErrorAC>
     | ReturnType<typeof setIsFetchingAC>
