@@ -9,6 +9,7 @@ import {Test} from "../pages/test/Test";
 import {Error404} from "../pages/error404/Error404";
 import style from "../../assets/style/Common.module.css"
 import {Packs} from "../pages/packs/Packs";
+import { Cards } from '../pages/cards/Cards';
 
 export const PATH = {
     LOGIN: "/login",
