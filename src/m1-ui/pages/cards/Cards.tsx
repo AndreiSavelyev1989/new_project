@@ -6,7 +6,7 @@ import {
   delCard,
   getCardsByPackId,
 } from '../../../m2-bll/redusers/cards-reducer';
-import { cardsAPI } from '../../../m3-dal/apiJS';
+import { cardsAPI } from '../../../m3-dal/api';
 import s from './cards.module.css';
 
 export const Cards = () => {
@@ -15,10 +15,7 @@ export const Cards = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getCardsByPackId());
-    cardsAPI.addPack().then((res) => {
-      console.log(res);
-    })
+    dispatch(getCardsByPackId('602e4d63487a3300049df466'));
   }, []);
   console.log(cards);
 
@@ -27,13 +24,13 @@ export const Cards = () => {
     console.log(e.target);
     const cardId = e.target.dataset.id;
     console.log(cardId);
-    dispatch(delCard(cardId));
+    dispatch(delCard(cardId,'602e4d63487a3300049df466'));
     return;
   };
 
   const addCardClick = (e: any) => {
     e.preventDefault();
-    dispatch(addCard());
+    dispatch(addCard('602e4d63487a3300049df466'));
     return;
   };
 

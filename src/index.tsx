@@ -5,7 +5,7 @@ import {App} from './App';
 import reportWebVitals from './reportWebVitals';
 import {HashRouter} from "react-router-dom";
 import {Provider} from "react-redux";
-import {store} from "./m2-bll/state/storeJS";
+import {store} from "./m2-bll/state/store";
 
 ReactDOM.render(
   <React.StrictMode>

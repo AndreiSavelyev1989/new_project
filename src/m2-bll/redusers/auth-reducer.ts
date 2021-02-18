@@ -41,7 +41,7 @@ export const isLogedInAC = (value: boolean) => ({type: "auth/SET-IS-LOGGED-IN", 
 export const setIsFetchingAC = (isFetching: boolean) => ({type: "auth/SET-IS-FETCHING", isFetching} as const)
 export const setIsInitialized = (isInitialized: boolean) => ({type: 'auth/INITIALIZED', isInitialized} as const)
 
-type ActionLoginType =
+export type ActionLoginType =
     | ReturnType<typeof isLogedInAC>
     | ReturnType<typeof setErrorAC>
     | ReturnType<typeof setIsFetchingAC>

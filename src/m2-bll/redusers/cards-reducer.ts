@@ -1,43 +1,52 @@
 import { Dispatch } from 'redux';
-import { cardsAPI } from '../../m3-dal/apiJS';
+import { cardsAPI } from '../../m3-dal/api';
 
-type CardType = {
-  answer: string;
-  question: string;
+const GET_CARDS = 'cards/GET_CARDS';
+
+type GetCardsType = {
+  type: typeof GET_CARDS;
+  packId: string;
+  cards: Array<CardsType>;
+};
+
+type CardsType = {
+  cardAnswer?: string;
+  cardQuestion?: string;
   cardsPack_id: string;
-  grade: number;
-  rating: number;
-  shots: number;
-  type: string;
-  user_id: string;
-  created: string;
-  updated: string;
-  __v: number;
-  _id: string;
+  min?: number;
+  max?: number;
+  sortCards?: number;
+  page?: number;
+  pageCount?: number;
 };
 
-type OptionsType = {
-  cardsTotalCount: number;
-  maxGrade: number;
-  minGrade: number;
-  page: number;
-  pageCount: number;
-  packUserId: string;
+type ActionsType = GetCardsType;
+
+type StateType = {
+  cards: Array<CardsType> | [];
+  options: any;
 };
+
+export const GetCards = (
+  packId: string,
+  cards: Array<CardsType>
+): GetCardsType => ({
+  type: GET_CARDS,
+  packId,
+  cards,
+});
 
 const initialState = {
-  cards: [] as CardType[],
-  options: {
-    page: '',
-    pageCount: '',
-    min: '',
-    max: '',
-  },
+  cards: [],
+  options: {},
 };
 
-export const cardsReducer = (state = initialState, action) => {
+export const cardsReducer = (
+  state: StateType = initialState,
+  action: ActionsType
+) => {
   switch (action.type) {
-    case 'GET_CARDS': {
+    case 'cards/GET_CARDS': {
       return { ...state, cards: [...action.cards] };
     }
     default:
@@ -45,35 +54,37 @@ export const cardsReducer = (state = initialState, action) => {
   }
 };
 
-export const getCardsByPackId = (cardPackId: string) => (
+export const getCardsByPackId = (cardsPackId: string) => (
   dispatch: Dispatch
 ) => {
   try {
-    cardsAPI.getCards().then((res) => {
-      dispatch({
-        type: 'GET_CARDS',
-        cards: res.data.cards,
-      });
+    cardsAPI.getCards(cardsPackId).then((res) => {
+      dispatch(GetCards(cardsPackId, res.data.cards));
     });
   } catch (e) {
     console.log(e);
   }
 };
 
-export const delCard = (cardId: string) => (dispatch: Dispatch) => {
+export const delCard = (cardId: string, cardPackId: string) => (
+  dispatch: Dispatch
+) => {
   try {
     cardsAPI.delCard(cardId).then(() => {
-      dispatch(getCardsByPackId());
+      //@ts-ignore
+      dispatch(getCardsByPackId(cardPackId));
     });
   } catch (e) {
     console.log(e);
   }
 };
 
-export const addCard = (cardPackId: string) => (dispatch: Dispatch) => {
+export const addCard = (cardsPackId: string) => (dispatch: Dispatch) => {
   try {
-    cardsAPI.addCard().then(() => {
-      dispatch(getCardsByPackId());
+    cardsAPI.addCard(cardsPackId).then(() => {
+      console.log(cardsPackId);
+      //@ts-ignore
+      dispatch(getCardsByPackId(cardsPackId));
     });
   } catch (e) {
     console.log(e);
