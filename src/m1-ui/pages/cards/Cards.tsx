@@ -13,6 +13,8 @@ export const Cards = () => {
   //@ts-ignore
   const cards = useSelector((state) => state.cards.cards);
   const dispatch = useDispatch();
+  const { cardsPackId }= useParams<Record<string, string>>();
+  console.log(cardsPackId);
 
   useEffect(() => {
     dispatch(getCardsByPackId('602e4d63487a3300049df466'));
