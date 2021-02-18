@@ -75,18 +75,18 @@ type ThunkAuthType = ThunkAction<void, AppRootStateType, unknown, ActionLoginTyp
 //thunk
 export const loginTC = (data: LoginDataType): ThunkAuthType => async (dispatch) => {
     try {
-        dispatch(setIsFetchingAC(true))
+        dispatch(setIsFetchingAC(true));
         await authApi.login(data);
-        dispatch(isLogedInAC(true))
+        dispatch(isLogedInAC(true));
     } catch (e) {
         const error = e.response
             ? e.response.data.error
             : (e.message + ', more details in the console');
-        dispatch(setErrorAC(error))
-        console.log('Error: ', {...e})
-        return console.log(error)
+        dispatch(setErrorAC(error));
+        console.log('Error: ', {...e});
+        return console.log(error);
     } finally {
-        dispatch(setIsFetchingAC(false))
+        dispatch(setIsFetchingAC(false));
     }
 }
 

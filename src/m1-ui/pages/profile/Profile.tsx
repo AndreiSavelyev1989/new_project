@@ -19,7 +19,6 @@ export const Profile = () => {
     const [userAvatar, setUserAvatar] = useState(authUserData.avatar)
 
     useEffect(() => {
-        // dispatch(updateMeDataTC(userName, userAvatar))
         if (isLoggedIn && isInitialized) {
             dispatch(updateMeDataTC(userName, userAvatar))
         }
@@ -27,10 +26,6 @@ export const Profile = () => {
             dispatch(authMeTC());
         }
     }, []);
-
-    // useEffect(() => {
-    //     dispatch(setUserData(userName, userAvatar))
-    // }, [userName, userAvatar])
 
     const logoutCallBack = () => {
         dispatch(logoutTC());
