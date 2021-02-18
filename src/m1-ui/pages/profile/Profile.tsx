@@ -7,7 +7,7 @@ import {authMeTC, initialStateType, logoutTC, setUserData, updateMeDataTC} from 
 import CommonButton from '../../../common/c2-CommonButton/CommonButton';
 import style from './Profile.module.css';
 import avatar from './../../../assets/images/avatar.png'
-
+import CommonInput from "../../../common/c1-CommonInput/CommonInput";
 
 
 export const Profile = () => {
@@ -15,9 +15,8 @@ export const Profile = () => {
     const {isInitialized, isLoggedIn, authUserData} = useSelector<AppRootStateType,
         initialStateType>((state) => state.auth);
     const [editMode, setEditMode] = useState(false)
-    const [userName, setUserName] = useState<string>('')
-    const [userAvatar, setUserAvatar] = useState<string>('')
-
+    const [userName, setUserName] = useState(authUserData.name)
+    const [userAvatar, setUserAvatar] = useState(authUserData.avatar)
 
     useEffect(() => {
         dispatch(updateMeDataTC(userName, userAvatar))
@@ -28,6 +27,10 @@ export const Profile = () => {
             dispatch(authMeTC());
         }
     }, []);
+
+    // useEffect(() => {
+    //     dispatch(setUserData(userName, userAvatar))
+    // }, [userName, userAvatar])
 
     const logoutCallBack = () => {
         dispatch(logoutTC());

@@ -10,7 +10,6 @@ export type initialStateType = {
     authUserData: {
         name: string
         avatar: string
-        token:string
     }
 
 }
@@ -22,7 +21,6 @@ const intialState: initialStateType = {
     authUserData: {
         name: "",
         avatar: "",
-        token:""
     }
 }
 
@@ -62,7 +60,7 @@ export const setErrorAC = (error: string | null) => ({type: "auth/ERROR", error}
 export const isLogedInAC = (value: boolean) => ({type: "auth/SET-IS-LOGGED-IN", value} as const)
 export const setIsFetchingAC = (isFetching: boolean) => ({type: "auth/SET-IS-FETCHING", isFetching} as const)
 export const setIsInitialized = (isInitialized: boolean) => ({type: 'auth/INITIALIZED', isInitialized} as const)
-export const setUserData = (name: string, avatar: string, token:string) => ({type: 'auth/SET-USER-DATA', name, avatar, token} as const)
+export const setUserData = (name: string, avatar: string) => ({type: 'auth/SET-USER-DATA', name, avatar} as const)
 
 
 export type ActionLoginType =
@@ -114,12 +112,6 @@ export const authMeTC = (): ThunkAuthType => async (dispatch, getState) => {
     }
 }
 
-
-export const updateMeDataTC = (name?: string, avatar?: string, token?:string): ThunkAuthType => async (dispatch) => {
-    try {
-        const res = await authApi.updateMe(name, avatar, token)
-        // console.log(res)
-        dispatch(setUserData(res.data.updatedUser.name, res.data.updatedUser.avatar, res.data.updatedUser.token))
 export const updateMeDataTC = (name: string, avatar: string): ThunkAuthType => async (dispatch, getState) => {
     try {
         const res = await authApi.updateMe(name, avatar)
