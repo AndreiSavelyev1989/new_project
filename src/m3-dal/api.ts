@@ -11,7 +11,6 @@ const instanceHeroku = axios.create(({
     baseURL: 'https://neko-back.herokuapp.com/2.0/',
 }))
 
-
 //Cards Api
 export const cardsPackAPI = {
     getPacks() {
@@ -90,10 +89,7 @@ export type LoginDataType = {
     password: string
     rememberMe?: boolean
 }
-// export type UpdateUserDataType = {
-//     name: string
-//     avatar: string
-// }
+
 //Response types
 type ResponseRestoreType = {
     info: string,
