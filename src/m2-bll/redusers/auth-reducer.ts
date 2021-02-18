@@ -78,7 +78,7 @@ export const loginTC = (data: LoginDataType): ThunkAuthType => async (dispatch) 
     try {
         dispatch(setIsFetchingAC(true))
         const  res = await authApi.login(data);
-        console.log(res)
+        dispatch(setUserData(res.data.name, ''));
         dispatch(isLogedInAC(true))
     } catch (e) {
         const error = e.response
@@ -102,11 +102,11 @@ export const logoutTC = (): ThunkAuthType => async (dispatch) => {
     }
 }
 
-export const authMeTC = (): ThunkAuthType => async (dispatch) => {
+export const authMeTC = (): ThunkAuthType => async (dispatch, getState) => {
     try {
         dispatch(setIsFetchingAC(true));
         const res = await authApi.me();
-        // console.log(res)
+        dispatch(setUserData(res.data.name, res.data.avatar))
         dispatch(setIsInitialized(true));
         dispatch(isLogedInAC(true));
     } finally {
@@ -114,11 +114,16 @@ export const authMeTC = (): ThunkAuthType => async (dispatch) => {
     }
 }
 
+
 export const updateMeDataTC = (name?: string, avatar?: string, token?:string): ThunkAuthType => async (dispatch) => {
     try {
         const res = await authApi.updateMe(name, avatar, token)
         // console.log(res)
         dispatch(setUserData(res.data.updatedUser.name, res.data.updatedUser.avatar, res.data.updatedUser.token))
+export const updateMeDataTC = (name: string, avatar: string): ThunkAuthType => async (dispatch, getState) => {
+    try {
+        const res = await authApi.updateMe(name, avatar)
+        dispatch(setUserData(res.data.updatedUser.name, res.data.updatedUser.avatar))
     } catch (e) {
         const error = e.response
             ? e.response.data.error

@@ -20,6 +20,10 @@ export const Profile = () => {
 
 
     useEffect(() => {
+        dispatch(updateMeDataTC(userName, userAvatar))
+        // if (isLoggedIn && isInitialized) {
+        //     dispatch(updateMeDataTC(userName, userAvatar))
+        // }
         if (!isInitialized) {
             dispatch(authMeTC());
         }
