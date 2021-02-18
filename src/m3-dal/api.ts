@@ -46,8 +46,8 @@ export const authApi = {
     me() {
         return instanceHeroku.post("auth/me")
     },
-    updateMe(name: string, avatar: string){
-       return instanceHeroku.put("auth/me", {name, avatar})
+    updateMe(name?: string, avatar?: string, token?:string){
+       return instanceHeroku.put("auth/me", {name, avatar,token})
     },
     logout() {
         return instanceHeroku.delete("auth/me")
