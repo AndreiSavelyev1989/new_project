@@ -130,10 +130,12 @@ export const cardsAPI = {
     delCard: async (cardId: string) => {
       return instanceHeroku.delete(`cards/card?id=${cardId}`);
     },
-    updateCard: async () => {
+    updateCard: async (cardId: string) => {
       return instanceHeroku.put('cards/card', {
         card: {
-          _id: '602c0d163a1410000468aa61',
+          _id: `${cardId}`,
+          question: 'Updated',
+          comments: 'Updated'
         },
       });
     },

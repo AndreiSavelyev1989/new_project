@@ -66,13 +66,13 @@ export const getCardsByPackId = (cardsPackId: string) => (
   }
 };
 
-export const delCard = (cardId: string, cardPackId: string) => (
+export const delCard = (cardId: string, cardsPackId: string) => (
   dispatch: Dispatch
 ) => {
   try {
     cardsAPI.delCard(cardId).then(() => {
       //@ts-ignore
-      dispatch(getCardsByPackId(cardPackId));
+      dispatch(getCardsByPackId(cardsPackId));
     });
   } catch (e) {
     console.log(e);
@@ -82,7 +82,18 @@ export const delCard = (cardId: string, cardPackId: string) => (
 export const addCard = (cardsPackId: string) => (dispatch: Dispatch) => {
   try {
     cardsAPI.addCard(cardsPackId).then(() => {
-      console.log(cardsPackId);
+      //@ts-ignore
+      dispatch(getCardsByPackId(cardsPackId));
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+
+export const updateCard = (cardId: string, cardsPackId: string) => (dispatch: Dispatch) => {
+  try {
+    cardsAPI.updateCard(cardId).then(() => {
       //@ts-ignore
       dispatch(getCardsByPackId(cardsPackId));
     });
