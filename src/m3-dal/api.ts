@@ -20,6 +20,9 @@ export const cardsPackAPI = {
     createPack(cardsPack:CardPacksType) {
         return instanceHeroku.post('cards/pack', {cardsPack: {...cardsPack}})
     },
+    deletePack(id:string) {
+        return instanceHeroku.delete(`cards/pack?id=${id}`)
+    }
 
 }
 //Packs Type

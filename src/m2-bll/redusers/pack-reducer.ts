@@ -81,6 +81,21 @@ export const createNewPack = (cardPack: CardPacksType):ThunkCardType => async (d
     }
 }
 
+export const deleteCardPack = (id:string):ThunkCardType => async (dispatch) => {
+    try {
+        await cardsPackAPI.deletePack(id)
+        await dispatch(getPacks())
+    }
+    catch (e) {
+        const error = e.response
+            ? e.response.data.error
+            : (e.message + ', more details in the console');
+        console.log('Error: ', {...e})
+        dispatch(setErrorAC(error))
+        return console.log(error)
+    }
+}
+
 
 
 
