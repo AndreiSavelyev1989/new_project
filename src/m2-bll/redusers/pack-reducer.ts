@@ -1,6 +1,8 @@
 import {Dispatch} from "redux";
 import {cardsPackAPI} from "../../m3-dal/api";
-import {setErrorAC} from "./auth-reducer";
+import {ActionLoginType, setErrorAC} from "./auth-reducer";
+import {ThunkAction} from "redux-thunk";
+import {AppRootStateType} from "../state/store";
 
 
 const initialState = {
@@ -32,6 +34,7 @@ export const setCardsPacksAC = (setPack: CardPacksType[]) => ({type: 'pack/SET-P
 
 
 type ActionPacksType =
+    |ActionLoginType
     | ReturnType<typeof setCardsPacksAC>
 
 //reducers
@@ -46,6 +49,8 @@ export const cardPackReducer = (state = initialState, action: ActionPacksType): 
 }
 
 //thunks
+type ThunkCardType = ThunkAction<void, AppRootStateType, unknown, ActionLoginType>
+
 export const getPacks = () => async (dispatch: Dispatch) => {
     try {
         const res = await cardsPackAPI.getPacks()
@@ -61,21 +66,22 @@ export const getPacks = () => async (dispatch: Dispatch) => {
     }
 };
 
-export const createNewPack = (cardPack: CardPacksType) => async (dispatch: Dispatch) => {
+export const createNewPack = (cardPack: CardPacksType):ThunkCardType => async (dispatch) => {
     try {
         await cardsPackAPI.createPack(cardPack)
-        //@ts-ignore
-        dispatch(getPacks())
+        await dispatch(getPacks())
 
     } catch (e) {
         const error = e.response
             ? e.response.data.error
             : (e.message + ', more details in the console');
-        dispatch(setErrorAC(error))
         console.log('Error: ', {...e})
+        dispatch(setErrorAC(error))
         return console.log(error)
     }
 }
+
+
 
 
 

@@ -17,7 +17,8 @@ export const PATH = {
     REGISTRATION: "/registration",
     RESTORE_PASSWORD: "/restore-password",
     TEST: "/test",
-    PACKS: "/packs"
+    PACKS: "/packs",
+    CARDS: "/cards"
 }
 
 export const Routes = () => {
@@ -32,6 +33,7 @@ export const Routes = () => {
                 <Route path={PATH.RESTORE_PASSWORD} render={() => <RestorePassword/>}/>
                 <Route path={PATH.TEST} render={() => <Test/>}/>
                 <Route path={PATH.PACKS} render={() => <Packs/>}/>
+                <Route path={`${PATH.CARDS}/:packCardsId`} render={() => <div>CARDS</div>}/>
                 <Route render={() => <Error404/>}/>
             </Switch>
         </div>
