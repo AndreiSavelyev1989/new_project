@@ -8,11 +8,12 @@ import CommonButton from '../../../common/c2-CommonButton/CommonButton';
 import style from './Profile.module.css';
 import avatar from './../../../assets/images/avatar.png'
 import CommonInput from "../../../common/c1-CommonInput/CommonInput";
+import {Preloader} from "../../preloader/Preloader";
 
 
 export const Profile = () => {
     const dispatch = useDispatch();
-    const {isInitialized, isLoggedIn, authUserData} = useSelector<AppRootStateType,
+    const {isInitialized, isLoggedIn, authUserData, isFetching} = useSelector<AppRootStateType,
         initialStateType>((state) => state.auth);
     const [editMode, setEditMode] = useState(false)
     const [userName, setUserName] = useState(authUserData.name)
@@ -49,10 +50,11 @@ export const Profile = () => {
         return <Redirect to={PATH.LOGIN}/>;
     }
     return (
+        //need to fix - hardcode avatar
         <div className={style.profileBlock}>
             <div>{authUserData.avatar
-                ? authUserData.avatar
-                : <img src={avatar} alt="user-avatar"/>}
+                ? <img src={avatar} alt="user-avatar"/>
+                : authUserData.avatar}
             </div>
             <div>
                 {editMode
@@ -61,7 +63,7 @@ export const Profile = () => {
                              autoFocus
                              onBlur={activateViewMode}
                              value={userName}/>
-                    : <span onDoubleClick={activateEditMode}>{authUserData.name}</span>
+                    : <span onDoubleClick={activateEditMode}>{isFetching ? <Preloader/> : authUserData.name}</span>
                 }
             </div>
             <div>

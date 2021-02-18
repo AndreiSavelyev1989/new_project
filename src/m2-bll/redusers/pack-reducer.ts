@@ -1,5 +1,5 @@
 import {cardsPackAPI} from "../../m3-dal/api";
-import {ActionLoginType, setErrorAC} from "./auth-reducer";
+import {ActionLoginType, setErrorAC, setIsFetchingAC} from "./auth-reducer";
 import {ThunkAction} from "redux-thunk";
 import {AppRootStateType} from "../state/store";
 
@@ -54,6 +54,7 @@ export const cardPackReducer = (state = initialState, action: ActionPacksType): 
 export const getPacks = ():ThunkPacksType  => async (dispatch) => {
 
     try {
+        dispatch(setIsFetchingAC(true));
         const res = await cardsPackAPI.getPacks()
         dispatch(setCardsPacksAC(res.data.cardPacks))
         console.log(res)
@@ -65,11 +66,15 @@ export const getPacks = ():ThunkPacksType  => async (dispatch) => {
         console.log('Error: ', {...e})
         return console.log(error)
     }
+    finally {
+        dispatch(setIsFetchingAC(false));
+    }
 };
 
 
 export const createNewPack = (cardPack: CardPacksType): ThunkPacksType => async (dispatch) => {
     try {
+        dispatch(setIsFetchingAC(true));
         await cardsPackAPI.createPack(cardPack)
         dispatch(getPacks())
     } catch (e) {
@@ -80,10 +85,14 @@ export const createNewPack = (cardPack: CardPacksType): ThunkPacksType => async 
         dispatch(setErrorAC(error))
         return console.log(error)
     }
+    finally {
+        dispatch(setIsFetchingAC(false));
+    }
 }
 
 export const deleteCardPack = (id:string):ThunkPacksType => async (dispatch) => {
     try {
+        dispatch(setIsFetchingAC(true));
         await cardsPackAPI.deletePack(id)
         await dispatch(getPacks())
     }
@@ -94,6 +103,9 @@ export const deleteCardPack = (id:string):ThunkPacksType => async (dispatch) => 
         console.log('Error: ', {...e})
         dispatch(setErrorAC(error))
         return console.log(error)
+    }
+    finally {
+        dispatch(setIsFetchingAC(false));
     }
 }
 

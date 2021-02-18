@@ -4,24 +4,26 @@ import {useDispatch, useSelector} from "react-redux";
 import {CardPacksType, createNewPack, getPacks} from "../../../m2-bll/redusers/pack-reducer";
 import {AppRootStateType} from "../../../m2-bll/state/store";
 import {Pack} from "./pack/Pack";
+import {Preloader} from "../../preloader/Preloader";
 
 export const Packs = () => {
     const dispatch = useDispatch()
-    const cards = useSelector<AppRootStateType, Array<CardPacksType>>(state => state.packs.cardsPack)
+    const packs = useSelector<AppRootStateType, Array<CardPacksType>>(state => state.packs.cardsPack)
+    const isFetching = useSelector<AppRootStateType, boolean>(state => state.auth.isFetching)
 
     useEffect(() => {
         dispatch(getPacks())
     }, [])
 
-    const mappedCards = cards.map(c => {
-        console.log(c._id)
+    const mappedPacks = packs.map(p => {
+        console.log(p._id)
         return <Pack
-            key={c._id}
-            name={c.name}
-            cardsCount={c.cardsCount}
-            updated={c.updated}
-            url={c.user_name}
-            id={c._id}
+            key={p._id}
+            name={p.name}
+            cardsCount={p.cardsCount}
+            updated={p.updated}
+            url={p.user_name}
+            id={p._id}
         />
     })
 
@@ -42,8 +44,9 @@ export const Packs = () => {
                 <div className={s.tableItem}>
                     <button onClick={onAddCardPackHandler}>add</button>
                 </div>
+                <div className={s.tableItem}>Go to link</div>
             </div>
-            {mappedCards}
+            {isFetching ? <Preloader/> : mappedPacks}
         </div>
     )
 }
