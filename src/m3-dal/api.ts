@@ -11,10 +11,11 @@ const instanceHeroku = axios.create(({
     baseURL: 'https://neko-back.herokuapp.com/2.0/',
 }))
 
+
 //Cards Api
 export const cardsPackAPI = {
-    getPacks() {
-        return instanceHeroku.get<GetPacksResponseType>('cards/pack')
+     getPacks(page: number | undefined, pageCount: number | undefined) {
+        return instanceHeroku.get<GetPacksResponseType>(`cards/pack?page=${page}&pageCount=${pageCount}`)
     },
     createPack(cardsPack:CardPacksType) {
         return instanceHeroku.post('cards/pack', {cardsPack: {...cardsPack}})
@@ -118,8 +119,6 @@ type LoginType = {
 type ResponseRegistrationType = ResponseLoginRegistrationType & RegistrationType
 
 export type LoginResponseType = ResponseLoginRegistrationType & LoginType
-
-
 
 //Cards API
 export const cardsAPI = {
