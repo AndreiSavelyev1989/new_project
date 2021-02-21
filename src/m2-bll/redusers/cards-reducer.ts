@@ -2,7 +2,6 @@ import { Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { cardsAPI } from '../../m3-dal/api';
 import { AppRootStateType } from '../state/store';
-import { setIsFetchingAC } from './auth-reducer';
 
 const GET_CARDS = 'cards/GET-CARDS';
 const SET_IS_FETCHING = 'cards/SET-IS-FETCHING';
@@ -13,25 +12,32 @@ type GetCardsType = {
   cards: Array<CardsType>;
 };
 
-type CardsType = {
-  cardAnswer?: string;
-  cardQuestion?: string;
+export type CardsType = {
+  answer: string;
   cardsPack_id: string;
-  min?: number;
-  max?: number;
-  sortCards?: number;
-  page?: number;
-  pageCount?: number;
+  comments: string;
+  created: string;
+  grade: string | undefined;
+  more_id: string;
+  question: string;
+  rating: number;
+  shots: number;
+  type: string;
+  updated: string;
+  user_id: string;
+  questionImg?: string;
+  __v: number;
+  _id: string;
 };
 
-type SetIsFetchingCardsType = {
+export type SetIsFetchingCardsType = {
   type: typeof SET_IS_FETCHING;
 };
 
 type ActionsType = GetCardsType | SetIsFetchingCardsType;
 
-type StateType = {
-  cards: Array<CardsType> | [];
+export type StateCardsType = {
+  cards: Array<CardsType>;
   options: {};
   isFetching: boolean;
 };
@@ -57,7 +63,7 @@ const initialState = {
 };
 
 export const cardsReducer = (
-  state: StateType = initialState,
+  state: StateCardsType = initialState,
   action: ActionsType
 ) => {
   switch (action.type) {

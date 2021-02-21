@@ -3,27 +3,30 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {
   addCard,
+  CardsType,
   getCardsByPackId,
+  StateCardsType,
 } from '../../../m2-bll/redusers/cards-reducer';
+import { AppRootStateType } from '../../../m2-bll/state/store';
 import { Preloader } from '../../preloader/Preloader';
 import { Card } from './Card';
 import s from './cards.module.css';
 
 export const Cards = () => {
-  //@ts-ignore
-  const { cards, isFetching } = useSelector((state) => state.cards);
+  const { cards, isFetching }  = useSelector<AppRootStateType, StateCardsType>((state) => state.cards);
+  console.log(cards);
   const dispatch = useDispatch();
   const { cardsPackId } = useParams<Record<string, string>>();
 
   useEffect(() => {
     dispatch(getCardsByPackId(cardsPackId));
-  }, []);
+  }, [dispatch, cardsPackId]);
 
-  const addCardClick = (e: any) => {
+  const addCardClick = () => {
     dispatch(addCard(cardsPackId));
   };
 
-  let fieldsWithCards = cards.map((card: any) => {
+  let fieldsWithCards = cards.map((card: CardsType) => {
     return (
       <Card
         key={card._id}
@@ -52,7 +55,7 @@ export const Cards = () => {
               <td className={s['table__cell']}>updated</td>
               <td className={s['table__cell']}>url</td>
               <td className={s['table__cell']}>
-                <button onClick={(e: any) => addCardClick(e)}>Add</button>
+                <button onClick={addCardClick}>Add</button>
               </td>
             </tr>
           </thead>
