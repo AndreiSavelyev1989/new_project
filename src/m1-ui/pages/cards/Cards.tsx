@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {
@@ -11,10 +11,22 @@ import { AppRootStateType } from '../../../m2-bll/state/store';
 import { Preloader } from '../../preloader/Preloader';
 import { Card } from './Card';
 import s from './cards.module.css';
+import style from './../../../assets/style/Common.module.css';
+import ModalContainer from './ModalContainer';
+import { useFormik } from 'formik';
+import CommonButton from '../../../common/c2-CommonButton/CommonButton';
+import CommonInput from '../../../common/c1-CommonInput/CommonInput';
+import { setErrorAC } from '../../../m2-bll/redusers/auth-reducer';
+
+type FormikErrorType = {
+  question?: string;
+};
 
 export const Cards = () => {
-  const { cards, isFetching }  = useSelector<AppRootStateType, StateCardsType>((state) => state.cards);
-  console.log(cards);
+  const { cards, isFetching } = useSelector<AppRootStateType, StateCardsType>(
+    (state) => state.cards
+  );
+  const [isShowModal, setIsShowModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { cardsPackId } = useParams<Record<string, string>>();
 
@@ -22,9 +34,27 @@ export const Cards = () => {
     dispatch(getCardsByPackId(cardsPackId));
   }, [dispatch, cardsPackId]);
 
-  const addCardClick = () => {
-    dispatch(addCard(cardsPackId));
+  const hideModal = () => {
+    setIsShowModal(false);
   };
+
+  const formik = useFormik({
+    initialValues: {
+      question: '',
+    },
+    validate: (values) => {
+      const errors: FormikErrorType = {};
+
+      if (!values.question) {
+        errors.question = 'Required';
+      }
+      return errors;
+    },
+
+    onSubmit: (values) => {
+      dispatch(addCard(cardsPackId));
+    },
+  });
 
   let fieldsWithCards = cards.map((card: CardsType) => {
     return (
@@ -55,13 +85,38 @@ export const Cards = () => {
               <td className={s['table__cell']}>updated</td>
               <td className={s['table__cell']}>url</td>
               <td className={s['table__cell']}>
-                <button onClick={addCardClick}>Add</button>
+                <button
+                  onClick={() => {
+                    setIsShowModal(true);
+                  }}
+                >
+                  Add
+                </button>
               </td>
             </tr>
           </thead>
           <tbody>{fieldsWithCards}</tbody>
         </table>
       )}
+      <ModalContainer show={isShowModal} closeCB={hideModal}>
+        <div className={style.commonContainer}>
+          <h1 className={style.title}>Restore</h1>
+          <form className={style.formBlock} onSubmit={formik.handleSubmit}>
+            <CommonInput
+              type={'text'}
+              label={'question'}
+              formikFieldsProps={{ ...formik.getFieldProps('text') }}
+            />
+
+            {formik.touched.question && formik.errors.question ? (
+              <div className={style.registrationError}>
+                {formik.errors.question}
+              </div>
+            ) : null}
+            <CommonButton type={'submit'} name={'Add card'} />
+          </form>
+        </div>
+      </ModalContainer>
     </>
   );
 };
