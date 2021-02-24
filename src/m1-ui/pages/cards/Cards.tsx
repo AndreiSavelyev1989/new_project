@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {
@@ -16,10 +16,11 @@ import ModalContainer from './ModalContainer';
 import { useFormik } from 'formik';
 import CommonButton from '../../../common/c2-CommonButton/CommonButton';
 import CommonInput from '../../../common/c1-CommonInput/CommonInput';
-import { setErrorAC } from '../../../m2-bll/redusers/auth-reducer';
+import useComponentVisible from './useComponentVisible';
 
 type FormikErrorType = {
   question?: string;
+  answer?: string;
 };
 
 export const Cards = () => {
@@ -38,25 +39,7 @@ export const Cards = () => {
     setIsShowModal(false);
   };
 
-  const formik = useFormik({
-    initialValues: {
-      question: '',
-    },
-    validate: (values) => {
-      const errors: FormikErrorType = {};
-
-      if (!values.question) {
-        errors.question = 'Required';
-      }
-      return errors;
-    },
-
-    onSubmit: (values) => {
-      dispatch(addCard(cardsPackId));
-    },
-  });
-
-  let fieldsWithCards = cards.map((card: CardsType) => {
+  const fieldsWithCards = cards.map((card: CardsType) => {
     return (
       <Card
         key={card._id}
@@ -70,6 +53,33 @@ export const Cards = () => {
       />
     );
   });
+
+  const formik = useFormik({
+    initialValues: {
+      question: '',
+      answer: '',
+    },
+    validate: (values) => {
+      const errors: FormikErrorType = {};
+
+      if (!values.question) {
+        errors.question = 'Required';
+      }
+      if (!values.answer) {
+        errors.answer = 'Required';
+      }
+      return errors;
+    },
+
+    onSubmit: (values) => {
+      dispatch(addCard(cardsPackId, values.question, values.answer));
+      values.question = '';
+      values.answer = '';
+      setIsShowModal(false);
+    },
+  });
+
+  const { ref, isComponentVisible, setIsComponentVisible } = useComponentVisible(true);
 
   return (
     <>
@@ -88,6 +98,7 @@ export const Cards = () => {
                 <button
                   onClick={() => {
                     setIsShowModal(true);
+                    setIsComponentVisible(true);
                   }}
                 >
                   Add
@@ -98,25 +109,42 @@ export const Cards = () => {
           <tbody>{fieldsWithCards}</tbody>
         </table>
       )}
-      <ModalContainer show={isShowModal} closeCB={hideModal}>
-        <div className={style.commonContainer}>
-          <h1 className={style.title}>Restore</h1>
-          <form className={style.formBlock} onSubmit={formik.handleSubmit}>
-            <CommonInput
-              type={'text'}
-              label={'question'}
-              formikFieldsProps={{ ...formik.getFieldProps('text') }}
-            />
+      <div className={s.modal} ref={ref}>
+        {isComponentVisible && (
+          <ModalContainer
+            show={isShowModal}
+            closeCB={hideModal}
+          >
+            <div className={style.commonContainer}>
+              <h2 className={style.title}>Add Card</h2>
+              <form className={style.formBlock} onSubmit={formik.handleSubmit}>
+                <CommonInput
+                  type={'text'}
+                  label={'question'}
+                  formikFieldsProps={{ ...formik.getFieldProps('question') }}
+                />
 
-            {formik.touched.question && formik.errors.question ? (
-              <div className={style.registrationError}>
-                {formik.errors.question}
-              </div>
-            ) : null}
-            <CommonButton type={'submit'} name={'Add card'} />
-          </form>
-        </div>
-      </ModalContainer>
+                {formik.touched.question && formik.errors.question ? (
+                  <div className={style.registrationError}>
+                    {formik.errors.question}
+                  </div>
+                ) : null}
+                <CommonInput
+                  type={'text'}
+                  label={'answer'}
+                  formikFieldsProps={{ ...formik.getFieldProps('answer') }}
+                />
+                {formik.touched.answer && formik.errors.answer ? (
+                  <div className={style.registrationError}>
+                    {formik.errors.answer}
+                  </div>
+                ) : null}
+                <CommonButton type={'submit'} name={'Add card'} />
+              </form>
+            </div>
+          </ModalContainer>
+        )}
+      </div>
     </>
   );
 };

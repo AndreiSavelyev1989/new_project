@@ -1,5 +1,5 @@
-import React, { ReactChild, useEffect, useState } from 'react';
-import Modal from './Modal';
+import React, { ReactChild } from 'react';
+import s from './cards.module.css';
 
 type PropsType = {
   show: boolean;
@@ -12,10 +12,10 @@ const ModalContainer = ({ show, closeCB, children, onShow }: PropsType) => {
   return (
     <>
       {show && (
-        <Modal>
-          <button onClick={closeCB}>X</button>
+        <>
+          <button className={s.btn} onClick={closeCB}>X</button>
           {children}
-        </Modal>
+        </>
       )}
     </>
   );

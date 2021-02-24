@@ -104,9 +104,13 @@ export const delCard = (cardId: string, cardsPackId: string): ThunkCardType => (
   }
 };
 
-export const addCard = (cardsPackId: string): ThunkCardType => (dispatch) => {
+export const addCard = (
+  cardsPackId: string,
+  question: string,
+  answer: string
+): ThunkCardType => (dispatch) => {
   try {
-    cardsAPI.addCard(cardsPackId).then(() => {
+    cardsAPI.addCard(cardsPackId, question, answer).then(() => {
       dispatch(getCardsByPackId(cardsPackId));
     });
   } catch (e) {
