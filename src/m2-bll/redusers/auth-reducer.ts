@@ -62,7 +62,6 @@ export const setIsFetchingAC = (isFetching: boolean) => ({type: "auth/SET-IS-FET
 export const setIsInitialized = (isInitialized: boolean) => ({type: 'auth/INITIALIZED', isInitialized} as const)
 export const setUserData = (name: string, avatar: string) => ({type: 'auth/SET-USER-DATA', name, avatar} as const)
 
-
 export type ActionLoginType =
     | ReturnType<typeof isLogedInAC>
     | ReturnType<typeof setErrorAC>
@@ -74,19 +73,18 @@ type ThunkAuthType = ThunkAction<void, AppRootStateType, unknown, ActionLoginTyp
 //thunk
 export const loginTC = (data: LoginDataType): ThunkAuthType => async (dispatch) => {
     try {
-        dispatch(setIsFetchingAC(true))
-        const  res = await authApi.login(data);
-        dispatch(setUserData(res.data.name, ''));
-        dispatch(isLogedInAC(true))
+        dispatch(setIsFetchingAC(true));
+        await authApi.login(data);
+        dispatch(isLogedInAC(true));
     } catch (e) {
         const error = e.response
             ? e.response.data.error
             : (e.message + ', more details in the console');
-        dispatch(setErrorAC(error))
-        console.log('Error: ', {...e})
-        return console.log(error)
+        dispatch(setErrorAC(error));
+        console.log('Error: ', {...e});
+        return console.log(error);
     } finally {
-        dispatch(setIsFetchingAC(false))
+        dispatch(setIsFetchingAC(false));
     }
 }
 
@@ -114,6 +112,7 @@ export const authMeTC = (): ThunkAuthType => async (dispatch, getState) => {
 
 export const updateMeDataTC = (name: string, avatar: string): ThunkAuthType => async (dispatch, getState) => {
     try {
+        dispatch(setIsFetchingAC(true));
         const res = await authApi.updateMe(name, avatar)
         dispatch(setUserData(res.data.updatedUser.name, res.data.updatedUser.avatar))
     } catch (e) {
@@ -123,5 +122,8 @@ export const updateMeDataTC = (name: string, avatar: string): ThunkAuthType => a
         dispatch(setErrorAC(error))
         console.log('Error: ', {...e})
         return console.log(error)
+    }
+    finally {
+        dispatch(setIsFetchingAC(false));
     }
 }
