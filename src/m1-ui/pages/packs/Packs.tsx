@@ -12,14 +12,20 @@ import {AppRootStateType} from "../../../m2-bll/state/store";
 import {Pack} from "./pack/Pack";
 import {Preloader} from "../../preloader/Preloader";
 import {Pagination} from "../../../common/c4-Pagination/Pagination";
+import {authMeTC, initialAuthStateType} from "../../../m2-bll/redusers/auth-reducer";
 
 export const Packs = () => {
     const dispatch = useDispatch()
     const packs = useSelector<AppRootStateType, Array<CardPacksType>>(state => state.packs.cardsPack)
     const {cardPacksTotalCount, portionSize, currentPage, pageSize} = useSelector<AppRootStateType, CardsPackInitialStateType>(state => state.packs)
     const isFetching = useSelector<AppRootStateType, boolean>(state => state.auth.isFetching)
-
+    const userAuthId = useSelector<AppRootStateType, string>(state => state.auth.authUserData.userId)
+    const avatar = useSelector<AppRootStateType, string>(state => state.auth.authUserData.avatar)
+    const name = useSelector<AppRootStateType, string>(state => state.auth.authUserData.name)
+//602519e29912521fc4dbc46a
+    //602519e29912521fc4dbc46a
     useEffect(() => {
+        dispatch(authMeTC())
         dispatch(getPacks(currentPage, pageSize))
     }, [])
 
@@ -32,6 +38,8 @@ export const Packs = () => {
             updated={p.updated}
             url={p.user_name}
             id={p._id}
+            user_id={p.user_id}
+            userAuthId={userAuthId}
         />
     })
 

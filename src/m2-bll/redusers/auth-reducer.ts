@@ -3,7 +3,7 @@ import {authApi, LoginDataType} from "../../m3-dal/api";
 import {ThunkAction} from "redux-thunk";
 import {AppRootStateType} from "../state/store";
 
-export type initialStateType = {
+export type initialAuthStateType = {
     isLoggedIn: boolean
     error: string | null
     isFetching: boolean
@@ -11,10 +11,11 @@ export type initialStateType = {
     authUserData: {
         name: string
         avatar: string
+        userId: string
     }
 
 }
-const intialState: initialStateType = {
+const intialState: initialAuthStateType = {
     isLoggedIn: false,
     error: null,
     isFetching: false,
@@ -22,11 +23,12 @@ const intialState: initialStateType = {
     authUserData: {
         name: "",
         avatar: "",
+        userId: ""
     }
 }
 
 //reducers
-export const authReducer = (state = intialState, action: ActionLoginType): initialStateType => {
+export const authReducer = (state = intialState, action: ActionLoginType): initialAuthStateType => {
     switch (action.type) {
         case "auth/SET-IS-LOGGED-IN": {
             return {...state, isLoggedIn: action.value}
@@ -46,7 +48,8 @@ export const authReducer = (state = intialState, action: ActionLoginType): initi
                 authUserData: {
                     ...state.authUserData,
                     name: action.name,
-                    avatar: action.avatar
+                    avatar: action.avatar,
+                    userId: action.userId
                 }
 
             }
@@ -61,7 +64,7 @@ export const setErrorAC = (error: string | null) => ({type: "auth/ERROR", error}
 export const isLogedInAC = (value: boolean) => ({type: "auth/SET-IS-LOGGED-IN", value} as const)
 export const setIsFetchingAC = (isFetching: boolean) => ({type: "auth/SET-IS-FETCHING", isFetching} as const)
 export const setIsInitialized = (isInitialized: boolean) => ({type: 'auth/INITIALIZED', isInitialized} as const)
-export const setUserData = (name: string, avatar: string) => ({type: 'auth/SET-USER-DATA', name, avatar} as const)
+export const setUserData = (name: string, avatar: string, userId: string) => ({type: 'auth/SET-USER-DATA', name, avatar, userId} as const)
 
 export type ActionLoginType =
     | ReturnType<typeof isLogedInAC>
@@ -103,7 +106,7 @@ export const authMeTC = (): ThunkAuthType => async (dispatch, getState) => {
     try {
         dispatch(setIsFetchingAC(true));
         const res = await authApi.me();
-        dispatch(setUserData(res.data.name, res.data.avatar))
+        dispatch(setUserData(res.data.name, res.data.avatar, res.data._id))
         dispatch(setIsInitialized(true));
         dispatch(isLogedInAC(true));
     } finally {
@@ -111,11 +114,11 @@ export const authMeTC = (): ThunkAuthType => async (dispatch, getState) => {
     }
 }
 
-export const updateMeDataTC = (name: string, avatar: string): ThunkAuthType => async (dispatch, getState) => {
+export const updateMeDataTC = (name: string, avatar: string, userId: string): ThunkAuthType => async (dispatch, getState) => {
     try {
         dispatch(setIsFetchingAC(true));
-        const res = await authApi.updateMe(name, avatar)
-        dispatch(setUserData(res.data.updatedUser.name, res.data.updatedUser.avatar))
+        const res = await authApi.updateMe(name, avatar, userId)
+        dispatch(setUserData(res.data.updatedUser.name, res.data.updatedUser.avatar, res.data._id))
     } catch (e) {
         const error = e.response
             ? e.response.data.error
