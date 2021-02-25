@@ -1,7 +1,6 @@
-import { Dispatch } from 'redux';
-import { ThunkAction } from 'redux-thunk';
-import { cardsAPI } from '../../m3-dal/api';
-import { AppRootStateType } from '../state/store';
+import {ThunkAction} from 'redux-thunk';
+import {cardsAPI} from '../../m3-dal/api';
+import {AppRootStateType} from '../state/store';
 
 const GET_CARDS = 'cards/GET-CARDS';
 const SET_IS_FETCHING = 'cards/SET-IS-FETCHING';
@@ -76,7 +75,7 @@ const initialState = {
   options: {},
   isFetching: false,
   cardsTotalCount: 0,
-  pageSize: 10,
+  pageSize: 5,
   currentPage: 1,
   portionSize: 4,
 };

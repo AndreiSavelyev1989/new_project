@@ -1,12 +1,12 @@
 import {cardsPackAPI} from "../../m3-dal/api";
-import {ActionLoginType, setErrorAC, setIsFetchingAC} from "./auth-reducer";
+import {ActionLoginType, authMeTC, setErrorAC, setIsFetchingAC} from "./auth-reducer";
 import {ThunkAction} from "redux-thunk";
 import {AppRootStateType} from "../state/store";
 
 
 const initialState = {
     cardsPack: [] as CardPacksType[],
-    pageSize: 5,
+    pageSize: 4,
     currentPage: 1,
     cardPacksTotalCount: 0,
     portionSize: 10,
@@ -42,13 +42,14 @@ export const setTotalCardPacksCount = (totalCardPacksCount: number) => ({
 export const setCurrentPage = (page: number) => ({type: "pack/SET_CURRENT_PAGE", page} as const)
 
 type ActionPacksType =
-    |ActionLoginType
+    | ActionLoginType
     | ReturnType<typeof setCardsPacksAC>
     | ReturnType<typeof setErrorAC>
     | ReturnType<typeof setTotalCardPacksCount>
     | ReturnType<typeof setCurrentPage>
 
 type ThunkPacksType = ThunkAction<void, AppRootStateType, unknown, ActionPacksType>
+
 //reducers
 export const cardPackReducer = (state = initialState, action: ActionPacksType): CardsPackInitialStateType => {
     switch (action.type) {
@@ -67,12 +68,11 @@ export const cardPackReducer = (state = initialState, action: ActionPacksType): 
             return state
     }
 }
-
 //thunks
-
-export const getPacks = (page: number | undefined, pageCount: number | undefined):ThunkPacksType  => async (dispatch) => {
+export const getPacks = (page: number | undefined, pageCount: number | undefined): ThunkPacksType => async (dispatch) => {
     try {
         dispatch(setIsFetchingAC(true));
+        await dispatch(authMeTC())
         const res = await cardsPackAPI.getPacks(page, pageCount)
         dispatch(setCardsPacksAC(res.data.cardPacks))
         dispatch(setTotalCardPacksCount(res.data.cardPacksTotalCount))
@@ -84,9 +84,10 @@ export const getPacks = (page: number | undefined, pageCount: number | undefined
         dispatch(setErrorAC(error))
         console.log('Error: ', {...e})
         return console.log(error)
-    }
-    finally {
-        dispatch(setIsFetchingAC(false));
+    } finally {
+        setTimeout(() => {
+            dispatch(setIsFetchingAC(false));
+        }, 1000)
     }
 };
 
@@ -94,7 +95,8 @@ export const getPacks = (page: number | undefined, pageCount: number | undefined
 export const createNewPack = (cardPack: CardPacksType, page?: number, pageCount?: number): ThunkPacksType => async (dispatch) => {
     try {
         dispatch(setIsFetchingAC(true));
-       await cardsPackAPI.createPack(cardPack)
+        await cardsPackAPI.createPack(cardPack)
+        dispatch(setCurrentPage(1))
         dispatch(getPacks(page, pageCount))
     } catch (e) {
         const error = e.response
@@ -103,27 +105,25 @@ export const createNewPack = (cardPack: CardPacksType, page?: number, pageCount?
         console.log('Error: ', {...e})
         dispatch(setErrorAC(error))
         return console.log(error)
-    }
-    finally {
+    } finally {
         dispatch(setIsFetchingAC(false));
     }
 }
 
-export const deleteCardPack = (id:string, page?: number, pageCount?: number):ThunkPacksType => async (dispatch) => {
+export const deleteCardPack = (id: string, page?: number, pageCount?: number): ThunkPacksType => async (dispatch) => {
     try {
-        dispatch(setIsFetchingAC(true));
+        dispatch(setIsFetchingAC(true))
         await cardsPackAPI.deletePack(id)
+        dispatch(setCurrentPage(1))
         await dispatch(getPacks(page, pageCount))
-    }
-    catch (e) {
+    } catch (e) {
         const error = e.response
             ? e.response.data.error
             : (e.message + ', more details in the console');
         console.log('Error: ', {...e})
         dispatch(setErrorAC(error))
         return console.log(error)
-    }
-    finally {
+    } finally {
         dispatch(setIsFetchingAC(false));
     }
 }

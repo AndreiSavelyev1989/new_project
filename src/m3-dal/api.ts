@@ -165,26 +165,26 @@ export const cardsAPI = {
     },
 };
 
-type ResponseCardType = {
-    answer: string;
-    question: string;
-    cardsPack_id: string;
-    grade: number;
-    rating: number;
-    shots: number;
-    type: string;
-    user_id: string;
-    created: string;
-    updated: string;
-    __v: number;
-    _id: string;
-};
-
-type ResponseCardOptionsType = {
-    cardsTotalCount: number;
-    maxGrade: number;
-    minGrade: number;
-    page: number;
-    pageCount: number;
-    packUserId: string;
-}
+// type ResponseCardType = {
+//     answer: string;
+//     question: string;
+//     cardsPack_id: string;
+//     grade: number;
+//     rating: number;
+//     shots: number;
+//     type: string;
+//     user_id: string;
+//     created: string;
+//     updated: string;
+//     __v: number;
+//     _id: string;
+// };
+//
+// type ResponseCardOptionsType = {
+//     cardsTotalCount: number;
+//     maxGrade: number;
+//     minGrade: number;
+//     page: number;
+//     pageCount: number;
+//     packUserId: string;
+// }

@@ -12,24 +12,20 @@ import {AppRootStateType} from "../../../m2-bll/state/store";
 import {Pack} from "./pack/Pack";
 import {Preloader} from "../../preloader/Preloader";
 import {Pagination} from "../../../common/c4-Pagination/Pagination";
-import {authMeTC, initialAuthStateType} from "../../../m2-bll/redusers/auth-reducer";
+import {initialAuthStateType} from "../../../m2-bll/redusers/auth-reducer";
 
 export const Packs = () => {
     const dispatch = useDispatch()
     const packs = useSelector<AppRootStateType, Array<CardPacksType>>(state => state.packs.cardsPack)
     const {cardPacksTotalCount, portionSize, currentPage, pageSize} = useSelector<AppRootStateType, CardsPackInitialStateType>(state => state.packs)
-    const isFetching = useSelector<AppRootStateType, boolean>(state => state.auth.isFetching)
+    const {isFetching} = useSelector<AppRootStateType, initialAuthStateType>(state => state.auth)
     const userAuthId = useSelector<AppRootStateType, string>(state => state.auth.authUserData.userId)
-    const avatar = useSelector<AppRootStateType, string>(state => state.auth.authUserData.avatar)
-    const name = useSelector<AppRootStateType, string>(state => state.auth.authUserData.name)
 
     useEffect(() => {
-        dispatch(authMeTC())
         dispatch(getPacks(currentPage, pageSize))
     }, [])
 
     const mappedPacks = packs.map(p => {
-        console.log(p._id)
         return <Pack
             key={p._id}
             name={p.name}
@@ -72,7 +68,6 @@ export const Packs = () => {
                     <button onClick={onAddCardPackHandler}>add</button>
                 </div>
                 <div className={s.tableItem}>Go to link</div>
-
             </div>
             {isFetching ? <Preloader/> : mappedPacks}
         </div>

@@ -1,10 +1,9 @@
-import React, {useEffect} from "react";
+import React from "react";
 import s from "../Packs.module.css";
 import {NavLink} from "react-router-dom";
 import {PATH} from "../../../routes/Routes";
-import {useDispatch, useSelector} from "react-redux";
-import {deleteCardPack, getPacks} from "../../../../m2-bll/redusers/pack-reducer";
-import {AppRootStateType} from "../../../../m2-bll/state/store";
+import {useDispatch} from "react-redux";
+import {deleteCardPack} from "../../../../m2-bll/redusers/pack-reducer";
 
 
 type PropsType = {
