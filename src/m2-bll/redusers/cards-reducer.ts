@@ -2,7 +2,6 @@ import { Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { cardsAPI } from '../../m3-dal/api';
 import { AppRootStateType } from '../state/store';
-import { setIsFetchingAC } from './auth-reducer';
 
 const GET_CARDS = 'cards/GET-CARDS';
 const SET_IS_FETCHING = 'cards/SET-IS-FETCHING';
@@ -13,33 +12,55 @@ type GetCardsType = {
   cards: Array<CardsType>;
 };
 
-type CardsType = {
-  cardAnswer?: string;
-  cardQuestion?: string;
+export type CardsType = {
+  answer: string;
   cardsPack_id: string;
-  min?: number;
-  max?: number;
-  sortCards?: number;
-  page?: number;
-  pageCount?: number;
+  comments: string;
+  created: string;
+  grade: string | undefined;
+  more_id: string;
+  question: string;
+  rating: number;
+  shots: number;
+  type: string;
+  updated: string;
+  user_id: string;
+  questionImg?: string;
+  __v: number;
+  _id: string;
 };
 
-type SetIsFetchingCardsType = {
+export type SetIsFetchingCardsType = {
   type: typeof SET_IS_FETCHING;
 };
 
-type ActionsType = GetCardsType | SetIsFetchingCardsType;
+type ActionsType =
+  | GetCardsType
+  | SetIsFetchingCardsType
+  | ReturnType<typeof setTotalCardsCount>
+  | ReturnType<typeof setCurrentPage>;
 
-type StateType = {
-  cards: Array<CardsType> | [];
+export type StateCardsType = {
+  cards: Array<CardsType>;
   options: {};
   isFetching: boolean;
+  cardsTotalCount: number;
+  pageSize: number;
+  currentPage: number;
+  portionSize: number;
 };
 
 type ThunkCardType = ThunkAction<void, AppRootStateType, unknown, ActionsType>;
 
 export const setIsFetchingCardsAC = () =>
   ({ type: 'cards/SET-IS-FETCHING' } as const);
+export const setTotalCardsCount = (totalCardsCount: number) =>
+  ({
+    type: 'SET_TOTAL_CARDS_COUNT',
+    totalCardsCount,
+  } as const);
+export const setCurrentPage = (page: number) =>
+  ({ type: 'SET_CURRENT_PAGE', page } as const);
 
 export const GetCards = (
   packId: string,
@@ -54,10 +75,14 @@ const initialState = {
   cards: [],
   options: {},
   isFetching: false,
+  cardsTotalCount: 0,
+  pageSize: 3,
+  currentPage: 1,
+  portionSize: 4,
 };
 
 export const cardsReducer = (
-  state: StateType = initialState,
+  state: StateCardsType = initialState,
   action: ActionsType
 ) => {
   switch (action.type) {
@@ -67,18 +92,31 @@ export const cardsReducer = (
     case SET_IS_FETCHING: {
       return { ...state, isFetching: !state.isFetching };
     }
+    case 'SET_TOTAL_CARDS_COUNT':
+      return {
+        ...state,
+        cardsTotalCount: action.totalCardsCount,
+      };
+    case 'SET_CURRENT_PAGE':
+      return {
+        ...state,
+        currentPage: action.page,
+      };
     default:
       return state;
   }
 };
 
-export const getCardsByPackId = (cardsPackId: string) => (
-  dispatch: Dispatch
-) => {
+export const getCardsByPackId = (
+  cardsPackId: string,
+  page: number | undefined,
+  pageCount: number | undefined
+): ThunkCardType => (dispatch) => {
   try {
     dispatch(setIsFetchingCardsAC());
-    cardsAPI.getCards(cardsPackId).then((res) => {
+    cardsAPI.getCards(cardsPackId, page, pageCount).then((res) => {
       dispatch(GetCards(cardsPackId, res.data.cards));
+      dispatch(setTotalCardsCount(res.data.cardsTotalCount));
       dispatch(setIsFetchingCardsAC());
     });
   } catch (e) {
@@ -86,22 +124,31 @@ export const getCardsByPackId = (cardsPackId: string) => (
   }
 };
 
-export const delCard = (cardId: string, cardsPackId: string): ThunkCardType => (
-  dispatch
-) => {
+export const delCard = (
+  cardId: string,
+  cardsPackId: string,
+  page?: number,
+  pageCount?: number
+): ThunkCardType => (dispatch) => {
   try {
     cardsAPI.delCard(cardId).then(() => {
-      dispatch(getCardsByPackId(cardsPackId));
+      dispatch(getCardsByPackId(cardsPackId, page, pageCount));
     });
   } catch (e) {
     console.log(e);
   }
 };
 
-export const addCard = (cardsPackId: string): ThunkCardType => (dispatch) => {
+export const addCard = (
+  cardsPackId: string,
+  question: string,
+  answer: string,
+  page?: number,
+  pageCount?: number
+): ThunkCardType => (dispatch) => {
   try {
-    cardsAPI.addCard(cardsPackId).then(() => {
-      dispatch(getCardsByPackId(cardsPackId));
+    cardsAPI.addCard(cardsPackId, question, answer).then(() => {
+      dispatch(getCardsByPackId(cardsPackId, page, pageCount));
     });
   } catch (e) {
     console.log(e);
@@ -110,11 +157,13 @@ export const addCard = (cardsPackId: string): ThunkCardType => (dispatch) => {
 
 export const updateCard = (
   cardId: string,
-  cardsPackId: string
+  cardsPackId: string,
+  page?: number,
+  pageCount?: number
 ): ThunkCardType => (dispatch) => {
   try {
     cardsAPI.updateCard(cardId).then(() => {
-      dispatch(getCardsByPackId(cardsPackId));
+      dispatch(getCardsByPackId(cardsPackId, page, pageCount));
     });
   } catch (e) {
     console.log(e);

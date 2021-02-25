@@ -3,11 +3,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Redirect} from 'react-router-dom';
 import {AppRootStateType} from '../../../m2-bll/state/store';
 import {PATH} from '../../routes/Routes';
-import {authMeTC, initialStateType, logoutTC, setUserData, updateMeDataTC} from '../../../m2-bll/redusers/auth-reducer';
+import {authMeTC, initialStateType, logoutTC, updateMeDataTC} from '../../../m2-bll/redusers/auth-reducer';
 import CommonButton from '../../../common/c2-CommonButton/CommonButton';
 import style from './Profile.module.css';
 import avatar from './../../../assets/images/avatar.png'
-import CommonInput from "../../../common/c1-CommonInput/CommonInput";
 import {Preloader} from "../../preloader/Preloader";
 
 
