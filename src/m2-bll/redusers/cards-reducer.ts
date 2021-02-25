@@ -13,19 +13,22 @@ type GetCardsType = {
 
 export type CardsType = {
   answer: string;
+  answerImg?: string;
+  answerVideo?: string;
   cardsPack_id: string;
-  comments: string;
+  comments?: string;
   created: string;
-  grade: string | undefined;
+  grade: number;
   more_id: string;
   question: string;
+  questionImg?: string;
+  questionVideo?: string;
   rating: number;
   shots: number;
   type: string;
   updated: string;
-  user_id: string;
-  questionImg?: string;
-  __v: number;
+  user_id?: string;
+  __v?: number;
   _id: string;
 };
 
@@ -108,8 +111,8 @@ export const cardsReducer = (
 
 export const getCardsByPackId = (
   cardsPackId: string,
-  page: number | undefined,
-  pageCount: number | undefined
+  page?: number | undefined,
+  pageCount?: number | undefined
 ): ThunkCardType => (dispatch) => {
   try {
     dispatch(setIsFetchingCardsAC());

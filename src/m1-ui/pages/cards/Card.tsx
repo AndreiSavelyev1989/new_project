@@ -1,6 +1,9 @@
 import s from './cards.module.css';
 import { useDispatch } from 'react-redux';
 import { delCard, updateCard } from '../../../m2-bll/redusers/cards-reducer';
+import {PATH} from "../../routes/Routes";
+import {NavLink} from "react-router-dom";
+import React from "react";
 
 type PropsType = {
     id: string;
@@ -9,7 +12,7 @@ type PropsType = {
     updated?: string;
     questionImg?: string;
     cardsPackId: string;
-    grade?: string;
+    grade?: number;
 };
 
 export const Card: React.FC<PropsType> = ({
@@ -48,6 +51,7 @@ export const Card: React.FC<PropsType> = ({
         <button data-id={id} onClick={delCardClick}>
           Del
         </button>
+          <NavLink to={PATH.LEARN + '/' + id}>learn</NavLink>
       </td>
       <td className={s['table__cell']}>
         <button data-id={id} onClick={updateCardClick}>

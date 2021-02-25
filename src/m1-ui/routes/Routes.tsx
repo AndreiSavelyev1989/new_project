@@ -10,6 +10,7 @@ import {Error404} from "../pages/error404/Error404";
 import style from "../../assets/style/Common.module.css"
 import {Packs} from "../pages/packs/Packs";
 import {Cards} from '../pages/cards/Cards';
+import {Learn} from "../pages/learn/Learn";
 
 export const PATH = {
     LOGIN: "/login",
@@ -19,11 +20,11 @@ export const PATH = {
     RESTORE_PASSWORD: "/restore-password",
     TEST: "/test",
     PACKS: "/packs",
-    CARDS: "/cards"
+    CARDS: "/cards",
+    LEARN: "/learn"
 }
 
 export const Routes = () => {
-
     return (
         <div className={style.commonBlock}>
             <Switch>
@@ -36,6 +37,7 @@ export const Routes = () => {
                 <Route path={PATH.TEST} render={() => <Test/>}/>
                 <Route path={PATH.PACKS} render={() => <Packs/>}/>
                 <Route path={`${PATH.CARDS}/:cardsPackId`} render={() => <Cards/>}/>
+                <Route path={PATH.LEARN} render={() => <Learn/>}/>
                 <Route render={() => <Error404/>}/>
             </Switch>
         </div>
