@@ -1,3 +1,4 @@
+
 import {authApi, LoginDataType} from "../../m3-dal/api";
 import {ThunkAction} from "redux-thunk";
 import {AppRootStateType} from "../state/store";
@@ -127,3 +128,4 @@ export const updateMeDataTC = (name: string, avatar: string): ThunkAuthType => a
         dispatch(setIsFetchingAC(false));
     }
 }
+

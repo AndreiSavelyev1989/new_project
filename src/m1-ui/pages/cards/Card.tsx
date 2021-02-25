@@ -23,36 +23,37 @@ export const Card: React.FC<PropsType> = ({
                                           }) => {
     const dispatch = useDispatch();
 
-    const delCardClick = (e: React.SyntheticEvent<HTMLButtonElement>) => {
-        const cardId = e.currentTarget.dataset.id;
-        if (cardId) {
-            dispatch(delCard(cardId, cardsPackId));
-        }
-    };
 
-    const updateCardClick = (e: React.SyntheticEvent<HTMLButtonElement>) => {
-        const cardId = e.currentTarget.dataset.id;
-        if (cardId) {
-            dispatch(updateCard(cardId, cardsPackId));
-        }
-    };
-    return (
-        <tr key={id}>
-            <td className={s['table__cell']}>{question}</td>
-            <td className={s['table__cell']}>{answer}</td>
-            <td className={s['table__cell']}>{grade}</td>
-            <td className={s['table__cell']}>{updated}</td>
-            <td className={s['table__cell']}>{questionImg}</td>
-            <td className={s['table__cell']}>
-                <button data-id={id} onClick={delCardClick}>
-                    Del
-                </button>
-            </td>
-            <td className={s['table__cell']}>
-                <button data-id={id} onClick={updateCardClick}>
-                    Update
-                </button>
-            </td>
-        </tr>
-    );
+  const delCardClick = (e: React.SyntheticEvent<HTMLButtonElement>) => {
+    const cardId = e.currentTarget.dataset.id;
+    if (cardId) {
+      dispatch(delCard(cardId, cardsPackId));
+    }
+  };
+
+  const updateCardClick = (e: React.SyntheticEvent<HTMLButtonElement>) => {
+    const cardId = e.currentTarget.dataset.id;
+    if (cardId) {
+      dispatch(updateCard(cardId, cardsPackId));
+    }
+  };
+  return (
+    <tr key={id}>
+      <td className={s['table__cell']}>{question}</td>
+      <td className={s['table__cell']}>{answer}</td>
+      <td className={s['table__cell']}>{grade}</td>
+      <td className={s['table__cell']}>{updated}</td>
+      <td className={s['table__cell']}>{questionImg}</td>
+      <td className={s['table__cell']}>
+        <button data-id={id} onClick={delCardClick}>
+          Del
+        </button>
+      </td>
+      <td className={s['table__cell']}>
+        <button data-id={id} onClick={updateCardClick}>
+          Update
+        </button>
+      </td>
+    </tr>
+  );
 };

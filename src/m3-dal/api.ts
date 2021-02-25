@@ -14,8 +14,8 @@ const instanceHeroku = axios.create(({
 
 //Cards Api
 export const cardsPackAPI = {
-    getPacks() {
-        return instanceHeroku.get<GetPacksResponseType>('cards/pack')
+     getPacks(page: number | undefined, pageCount: number | undefined) {
+        return instanceHeroku.get<GetPacksResponseType>(`cards/pack?page=${page}&pageCount=${pageCount}`)
     },
     createPack(cardsPack:CardPacksType) {
         return instanceHeroku.post('cards/pack', {cardsPack: {...cardsPack}})
@@ -90,10 +90,7 @@ export type LoginDataType = {
     password: string
     rememberMe?: boolean
 }
-// export type UpdateUserDataType = {
-//     name: string
-//     avatar: string
-// }
+
 //Response types
 type ResponseRestoreType = {
     info: string,
@@ -123,13 +120,16 @@ type ResponseRegistrationType = ResponseLoginRegistrationType & RegistrationType
 
 export type LoginResponseType = ResponseLoginRegistrationType & LoginType
 
-
-
 //Cards API
 export const cardsAPI = {
-    getCards: async (cardsPackId: string) => {
+    // getCards: async (cardsPackId: string) => {
+    //   return instanceHeroku.get(
+    //     `cards/card?cardsPack_id=${cardsPackId}`
+    //   );
+    // },
+    getCards: async (cardsPackId: string, page: number | undefined, pageCount: number | undefined) => {
       return instanceHeroku.get(
-        `cards/card?cardsPack_id=${cardsPackId}`
+        `cards/card?cardsPack_id=${cardsPackId}&page=${page}&pageCount=${pageCount}`
       );
     },
     addCard: async (cardsPackId: string) => {
