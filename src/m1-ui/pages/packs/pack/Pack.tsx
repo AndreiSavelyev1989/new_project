@@ -4,6 +4,7 @@ import {NavLink} from "react-router-dom";
 import {PATH} from "../../../routes/Routes";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteCardPack, getPacks} from "../../../../m2-bll/redusers/pack-reducer";
+import {AppRootStateType} from "../../../../m2-bll/state/store";
 
 
 type PropsType = {
@@ -25,6 +26,7 @@ export const Pack: React.FC<PropsType> = (props) => {
             dispatch(deleteCardPack(props.id))
         }
     }
+
 
     return (
         <div className={s.table}>
