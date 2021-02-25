@@ -1,6 +1,6 @@
-import {ThunkAction} from 'redux-thunk';
-import {cardsAPI} from '../../m3-dal/api';
-import {AppRootStateType} from '../state/store';
+import { ThunkAction } from 'redux-thunk';
+import { cardsAPI } from '../../m3-dal/api';
+import { AppRootStateType } from '../state/store';
 
 const GET_CARDS = 'cards/GET-CARDS';
 const SET_IS_FETCHING = 'cards/SET-IS-FETCHING';
@@ -160,11 +160,13 @@ export const addCard = (
 export const updateCard = (
   cardId: string,
   cardsPackId: string,
+  answer?: string,
+  question?: string,
   page?: number,
   pageCount?: number
 ): ThunkCardType => (dispatch) => {
   try {
-    cardsAPI.updateCard(cardId).then(() => {
+    cardsAPI.updateCard(cardId, question, answer).then(() => {
       dispatch(getCardsByPackId(cardsPackId, page, pageCount));
     });
   } catch (e) {
