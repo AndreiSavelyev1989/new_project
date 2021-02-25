@@ -22,8 +22,7 @@ export const Packs = () => {
     const userAuthId = useSelector<AppRootStateType, string>(state => state.auth.authUserData.userId)
     const avatar = useSelector<AppRootStateType, string>(state => state.auth.authUserData.avatar)
     const name = useSelector<AppRootStateType, string>(state => state.auth.authUserData.name)
-//602519e29912521fc4dbc46a
-    //602519e29912521fc4dbc46a
+
     useEffect(() => {
         dispatch(authMeTC())
         dispatch(getPacks(currentPage, pageSize))

@@ -131,3 +131,4 @@ export const updateMeDataTC = (name: string, avatar: string, userId: string): Th
         dispatch(setIsFetchingAC(false));
     }
 }
+
