@@ -76,7 +76,7 @@ const initialState = {
   options: {},
   isFetching: false,
   cardsTotalCount: 0,
-  pageSize: 3,
+  pageSize: 10,
   currentPage: 1,
   portionSize: 4,
 };
