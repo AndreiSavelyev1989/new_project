@@ -3,25 +3,26 @@ import { useDispatch } from 'react-redux';
 import { delCard, updateCard } from '../../../m2-bll/redusers/cards-reducer';
 
 type PropsType = {
-  id: string;
-  question?: string;
-  answer: string;
-  updated?: string;
-  questionImg?: string;
-  cardsPackId: string;
-  grade?: string;
+    id: string;
+    question?: string;
+    answer: string;
+    updated?: string;
+    questionImg?: string;
+    cardsPackId: string;
+    grade?: string;
 };
 
 export const Card: React.FC<PropsType> = ({
-  id,
-  question,
-  answer,
-  grade,
-  updated,
-  questionImg,
-  cardsPackId,
-}) => {
-  const dispatch = useDispatch();
+                                              id,
+                                              question,
+                                              answer,
+                                              grade,
+                                              updated,
+                                              questionImg,
+                                              cardsPackId,
+                                          }) => {
+    const dispatch = useDispatch();
+
 
   const delCardClick = (e: React.SyntheticEvent<HTMLButtonElement>) => {
     const cardId = e.currentTarget.dataset.id;

@@ -128,3 +128,4 @@ export const updateMeDataTC = (name: string, avatar: string): ThunkAuthType => a
         dispatch(setIsFetchingAC(false));
     }
 }
+
