@@ -37,7 +37,7 @@ export const Cards = () => {
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { cardsPackId } = useParams<Record<string, string>>();
-
+  //comment
   useEffect(() => {
     dispatch(getCardsByPackId(cardsPackId, currentPage, pageSize));
   }, [dispatch, cardsPackId]);
