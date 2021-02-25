@@ -13,6 +13,19 @@ const instanceHeroku = axios.create({
 
 //Cards Api
 export const cardsPackAPI = {
+<<<<<<< HEAD
+    getPacks(page: number | undefined, pageCount: number | undefined) {
+        return instanceHeroku.get<GetPacksResponseType>(`cards/pack?page=${page}&pageCount=${pageCount}`)
+    },
+    createPack(cardsPack: CardPacksType) {
+        return instanceHeroku.post('cards/pack', {cardsPack: {...cardsPack}})
+    },
+    deletePack(id: string) {
+        return instanceHeroku.delete(`cards/pack?id=${id}`)
+    }
+
+}
+=======
   getPacks(page: number | undefined, pageCount: number | undefined) {
     return instanceHeroku.get<GetPacksResponseType>(
       `cards/pack?page=${page}&pageCount=${pageCount}`
@@ -25,6 +38,7 @@ export const cardsPackAPI = {
     return instanceHeroku.delete(`cards/pack?id=${id}`);
   },
 };
+>>>>>>> master
 //Packs Type
 export type GetPacksResponseType = {
   cardPacks: CardPacksType[];
@@ -39,6 +53,21 @@ export type GetPacksResponseType = {
 
 //Auth api
 export const authApi = {
+<<<<<<< HEAD
+    login(data: LoginDataType) {
+        return instanceHeroku.post<LoginResponseType>('/auth/login', data)
+    },
+    me() {
+        return instanceHeroku.post("auth/me")
+    },
+    updateMe(name: string, avatar: string, userId: string) {
+        return instanceHeroku.put("auth/me", {name, avatar, userId})
+    },
+    logout() {
+        return instanceHeroku.delete("auth/me")
+    }
+}
+=======
   login(data: LoginDataType) {
     return instanceHeroku.post<LoginResponseType>('/auth/login', data);
   },
@@ -52,6 +81,7 @@ export const authApi = {
     return instanceHeroku.delete('auth/me');
   },
 };
+>>>>>>> master
 
 export const restoreAPI = {
   restorePassword: async (email: string | null) => {
@@ -128,6 +158,62 @@ export type LoginResponseType = ResponseLoginRegistrationType & LoginType;
 
 //Cards API
 export const cardsAPI = {
+<<<<<<< HEAD
+    getCards: async (cardsPackId: string, page: number | undefined, pageCount: number | undefined) => {
+        return instanceHeroku.get(
+            `cards/card?cardsPack_id=${cardsPackId}&page=${page}&pageCount=${pageCount}`
+        );
+    },
+    addCard: async (cardsPackId: string) => {
+        return instanceHeroku.post('cards/card', {
+            card: {
+                cardsPack_id: `${cardsPackId}`,
+            },
+        });
+    },
+    delCard: async (cardId: string) => {
+        return instanceHeroku.delete(`cards/card?id=${cardId}`);
+    },
+    updateCard: async (cardId: string) => {
+        return instanceHeroku.put('cards/card', {
+            card: {
+                _id: `${cardId}`,
+                question: 'Updated',
+                comments: 'Updated'
+            },
+        });
+    },
+    addPack: async () => {
+        return instanceHeroku.post('/cards/pack', {
+            cardsPack: {},
+        });
+    },
+};
+
+
+type ResponseCardType = {
+    answer: string;
+    question: string;
+    cardsPack_id: string;
+    grade: number;
+    rating: number;
+    shots: number;
+    type: string;
+    user_id: string;
+    created: string;
+    updated: string;
+    __v: number;
+    _id: string;
+};
+
+type ResponseCardOptionsType = {
+    cardsTotalCount: number;
+    maxGrade: number;
+    minGrade: number;
+    page: number;
+    pageCount: number;
+    packUserId: string;
+=======
   getCards: async (
     cardsPackId: string,
     page: number | undefined,
@@ -178,6 +264,7 @@ type ResponseCardType = {
   updated: string;
   __v: number;
   _id: string;
+>>>>>>> master
 };
 
 type ResponseCardOptionsType = {

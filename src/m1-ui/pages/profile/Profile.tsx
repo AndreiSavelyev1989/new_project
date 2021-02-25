@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Redirect} from 'react-router-dom';
 import {AppRootStateType} from '../../../m2-bll/state/store';
 import {PATH} from '../../routes/Routes';
-import {authMeTC, initialStateType, logoutTC, updateMeDataTC} from '../../../m2-bll/redusers/auth-reducer';
+import {authMeTC, initialAuthStateType, logoutTC, updateMeDataTC} from '../../../m2-bll/redusers/auth-reducer';
 import CommonButton from '../../../common/c2-CommonButton/CommonButton';
 import style from './Profile.module.css';
 import avatar from './../../../assets/images/avatar.png'
@@ -13,14 +13,14 @@ import {Preloader} from "../../preloader/Preloader";
 export const Profile = () => {
     const dispatch = useDispatch();
     const {isInitialized, isLoggedIn, authUserData, isFetching} = useSelector<AppRootStateType,
-        initialStateType>((state) => state.auth);
+        initialAuthStateType>((state) => state.auth);
     const [editMode, setEditMode] = useState(false)
     const [userName, setUserName] = useState(authUserData.name)
     const [userAvatar, setUserAvatar] = useState(authUserData.avatar)
 
     useEffect(() => {
         if (isLoggedIn && isInitialized) {
-            dispatch(updateMeDataTC(userName, userAvatar))
+            dispatch(updateMeDataTC(userName, userAvatar, authUserData.userId))
         }
         if (!isInitialized) {
             dispatch(authMeTC());
@@ -42,7 +42,7 @@ export const Profile = () => {
 
     const activateViewMode = () => {
         setEditMode(false)
-        dispatch(updateMeDataTC(userName, userAvatar))
+        dispatch(updateMeDataTC(userName, userAvatar, authUserData.userId))
     }
 
     if (!isLoggedIn) {

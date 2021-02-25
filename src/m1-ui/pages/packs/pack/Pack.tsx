@@ -12,12 +12,13 @@ type PropsType = {
     updated: string | undefined
     url: string | undefined
     id: string | undefined
+    userAuthId: string
+    user_id: string | undefined
 }
 
 
 export const Pack: React.FC<PropsType> = (props) => {
     const dispatch = useDispatch()
-
 
     const onDeleteCardPackHandler = () => {
         if (props.id) {
@@ -33,7 +34,10 @@ export const Pack: React.FC<PropsType> = (props) => {
                 <div className={s.tableItem}>{props.updated}</div>
                 <div className={s.tableItem}>{props.url}</div>
                 <div className={s.tableItem}>
-                    <button onClick={onDeleteCardPackHandler}>del</button>
+                    <button
+                        onClick={onDeleteCardPackHandler}
+                        disabled={props.userAuthId !== props.user_id}
+                    >del</button>
                 </div>
                 <div className={s.tableItem}>
                     <NavLink to={PATH.CARDS + '/' + props.id}>CARDS</NavLink>

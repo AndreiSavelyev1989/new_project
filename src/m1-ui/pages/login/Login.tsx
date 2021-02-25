@@ -1,7 +1,7 @@
 import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../../m2-bll/state/store";
-import {initialStateType, isLogedInAC, loginTC} from "../../../m2-bll/redusers/auth-reducer";
+import {initialAuthStateType, loginTC} from "../../../m2-bll/redusers/auth-reducer";
 import {Redirect} from "react-router-dom";
 import {useFormik} from "formik";
 import CommonInput from "../../../common/c1-CommonInput/CommonInput";
@@ -19,7 +19,7 @@ type FormikErrorType = {
 
 export const Login = () => {
     const dispatch = useDispatch() //разобраться с useDispatch
-    const {isFetching, error, isLoggedIn, isInitialized} = useSelector<AppRootStateType, initialStateType>(state => state.auth);
+    const {isFetching, error, isLoggedIn, isInitialized} = useSelector<AppRootStateType, initialAuthStateType>(state => state.auth);
 
     const formik = useFormik({
         initialValues: {
