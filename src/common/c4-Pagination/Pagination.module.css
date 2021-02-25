@@ -3,6 +3,7 @@
     justify-content: space-evenly;
     margin-bottom: 10px;
     align-items: center;
+    z-index: 1000;
 }
 
 .currentButton {
