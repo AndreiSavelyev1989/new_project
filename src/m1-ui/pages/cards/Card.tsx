@@ -1,15 +1,13 @@
 import s from './cards.module.css';
 import style from './../../../assets/style/Common.module.css';
-import { useDispatch } from 'react-redux';
-import { delCard, updateCard } from '../../../m2-bll/redusers/cards-reducer';
-import { PATH } from '../../routes/Routes';
-import { NavLink } from 'react-router-dom';
-import React, { useState } from 'react';
+import {useDispatch} from 'react-redux';
+import {delCard, updateCard} from '../../../m2-bll/redusers/cards-reducer';
+import React, {useState} from 'react';
 import useComponentVisible from './useComponentVisible';
 import CommonInput from '../../../common/c1-CommonInput/CommonInput';
 import CommonButton from '../../../common/c2-CommonButton/CommonButton';
 import ModalContainer from './ModalContainer';
-import { useFormik } from 'formik';
+import {useFormik} from 'formik';
 
 type PropsType = {
   id: string;
@@ -80,7 +78,6 @@ export const Card: React.FC<PropsType> = ({
           <button data-id={id} onClick={delCardClick}>
             Del
           </button>
-          <NavLink to={PATH.LEARN + '/' + id}>learn</NavLink>
         </td>
         <td className={s['table__cell']}>
           <button

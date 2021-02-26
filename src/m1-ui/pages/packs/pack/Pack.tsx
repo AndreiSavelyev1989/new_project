@@ -38,10 +38,14 @@ export const Pack: React.FC<PropsType> = (props) => {
                     <button
                         onClick={onDeleteCardPackHandler}
                         disabled={props.userAuthId !== props.user_id}
-                    >del</button>
+                    >del
+                    </button>
                 </div>
                 <div className={s.tableItem}>
                     <NavLink to={PATH.CARDS + '/' + props.id}>CARDS</NavLink>
+                    <div>
+                        <NavLink to={PATH.LEARN + '/' + props.id}>learn</NavLink>
+                    </div>
                 </div>
 
             </div>
