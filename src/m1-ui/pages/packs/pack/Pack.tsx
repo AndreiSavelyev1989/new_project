@@ -21,10 +21,10 @@ export const Pack: React.FC<PropsType> = (props) => {
   const dispatch = useDispatch();
 
   const onDeleteCardPackHandler = () => {
-    if (props.id) {
-      dispatch(deleteCardPack(props.id));
-    }
-
+      if (props.id) {
+          dispatch(deleteCardPack(props.id));
+      }
+  }
   const onClickUpdateHandler = () => {
     props.onUpdate();
     props.cb(props.id);
