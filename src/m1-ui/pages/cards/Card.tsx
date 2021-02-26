@@ -47,13 +47,6 @@ export const Card: React.FC<PropsType> = ({
     }
   };
 
-  const updateCardClick = (e: React.SyntheticEvent<HTMLButtonElement>) => {
-    const cardId = e.currentTarget.dataset.id;
-    if (cardId) {
-      dispatch(updateCard(cardId, cardsPackId));
-    }
-  };
-
   const formik = useFormik({
     initialValues: {
       question: '',
@@ -68,6 +61,7 @@ export const Card: React.FC<PropsType> = ({
       setIsShowModal(false);
     },
   });
+
   return (
     <>
       <tr key={id}>

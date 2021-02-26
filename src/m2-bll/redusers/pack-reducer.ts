@@ -128,6 +128,24 @@ export const deleteCardPack = (id: string, page?: number, pageCount?: number): T
     }
 }
 
+export const updateCardPack = (cardPack: CardPacksType, page?: number, pageCount?: number): ThunkPacksType => async (dispatch) => {
+    try {
+        dispatch(setIsFetchingAC(true));
+        await cardsPackAPI.updatePack(cardPack)
+        dispatch(setCurrentPage(1))
+        dispatch(getPacks(page, pageCount))
+    } catch (e) {
+        const error = e.response
+            ? e.response.data.error
+            : (e.message + ', more details in the console');
+        console.log('Error: ', {...e})
+        dispatch(setErrorAC(error))
+        return console.log(error)
+    } finally {
+        dispatch(setIsFetchingAC(false));
+    }
+}
+
 
 
 
