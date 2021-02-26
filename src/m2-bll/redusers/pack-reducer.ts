@@ -85,9 +85,7 @@ export const getPacks = (page: number | undefined, pageCount: number | undefined
         console.log('Error: ', {...e})
         return console.log(error)
     } finally {
-        setTimeout(() => {
-            dispatch(setIsFetchingAC(false));
-        }, 1000)
+        dispatch(setIsFetchingAC(false));
     }
 };
 
@@ -115,7 +113,7 @@ export const deleteCardPack = (id: string, page?: number, pageCount?: number): T
         dispatch(setIsFetchingAC(true))
         await cardsPackAPI.deletePack(id)
         dispatch(setCurrentPage(1))
-        await dispatch(getPacks(page, pageCount))
+        dispatch(getPacks(page, pageCount))
     } catch (e) {
         const error = e.response
             ? e.response.data.error

@@ -19,7 +19,7 @@ type FormikErrorType = {
 
 export const Login = () => {
     const dispatch = useDispatch() //разобраться с useDispatch
-    const {isFetching, error, isLoggedIn, isInitialized} = useSelector<AppRootStateType, initialAuthStateType>(state => state.auth);
+    const {isFetching, error, isLoggedIn} = useSelector<AppRootStateType, initialAuthStateType>(state => state.auth);
 
     const formik = useFormik({
         initialValues: {
@@ -47,40 +47,43 @@ export const Login = () => {
 
         onSubmit: values => {
             dispatch(loginTC(values))
-
         },
     })
     if (isLoggedIn) {
-        console.log(isLoggedIn, isInitialized)
         return <Redirect to={"/"}/>
     }
     return (
-        <div className={style.commonContainer}>
-            <h1 className={style.title}>Login Here</h1>
-            <div className={style.error}>{error ? error : null}</div>
-            <form className={style.formBlock} onSubmit={formik.handleSubmit}>
-                <CommonInput
-                    type={"text"}
-                    label={"Email"}
-                    formikFieldsProps={{...formik.getFieldProps("email")}}/>
-                {formik.touched.email && formik.errors.email ?
-                    <div className={style.registrationError}>{formik.errors.email}</div> : null}
+        <>
+            {isFetching
+                ? <Preloader/>
+                : <div className={style.commonContainer}>
+                    <h1 className={style.title}>Login Here</h1>
+                    <div className={style.error}>{error ? error : null}</div>
+                    <form className={style.formBlock} onSubmit={formik.handleSubmit}>
+                        <CommonInput
+                            type={"text"}
+                            label={"Email"}
+                            formikFieldsProps={{...formik.getFieldProps("email")}}/>
+                        {formik.touched.email && formik.errors.email ?
+                            <div className={style.registrationError}>{formik.errors.email}</div> : null}
 
-                <CommonInput
-                    type={"password"}
-                    label={"Password"}
-                    formikFieldsProps={{...formik.getFieldProps("password")}}/>
-                {formik.touched.password && formik.errors.password ?
-                    <div className={style.registrationError}>{formik.errors.password}</div> : null}
+                        <CommonInput
+                            type={"password"}
+                            label={"Password"}
+                            formikFieldsProps={{...formik.getFieldProps("password")}}/>
+                        {formik.touched.password && formik.errors.password ?
+                            <div className={style.registrationError}>{formik.errors.password}</div> : null}
 
-                <div className={s.checkbox}>
-                    <CommonCheckbox
-                        type={"checkbox"}
-                        formikFieldsProps={{...formik.getFieldProps("rememberMe")}}/>
+                        <div className={s.checkbox}>
+                            <CommonCheckbox
+                                type={"checkbox"}
+                                formikFieldsProps={{...formik.getFieldProps("rememberMe")}}/>
+                        </div>
 
+                        <CommonButton type={"submit"} name={"Login"}/>
+                    </form>
                 </div>
-                {isFetching ? <Preloader/> : <CommonButton type={"submit"} name={"Login"}/>}
-            </form>
-        </div>
+            }
+        </>
     )
 }

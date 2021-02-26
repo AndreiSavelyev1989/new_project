@@ -19,10 +19,7 @@ export const Profile = () => {
     const [userAvatar, setUserAvatar] = useState(authUserData.avatar)
 
     useEffect(() => {
-        if (isLoggedIn && isInitialized) {
-            dispatch(updateMeDataTC(userName, userAvatar, authUserData.userId))
-        }
-        if (!isInitialized) {
+        if(!isInitialized){
             dispatch(authMeTC());
         }
     }, []);

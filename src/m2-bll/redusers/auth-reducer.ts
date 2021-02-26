@@ -1,4 +1,3 @@
-
 import {authApi, LoginDataType} from "../../m3-dal/api";
 import {ThunkAction} from "redux-thunk";
 import {AppRootStateType} from "../state/store";
@@ -78,7 +77,9 @@ type ThunkAuthType = ThunkAction<void, AppRootStateType, unknown, ActionLoginTyp
 export const loginTC = (data: LoginDataType): ThunkAuthType => async (dispatch) => {
     try {
         dispatch(setIsFetchingAC(true));
-        await authApi.login(data);
+        const res = await authApi.login(data);
+        console.log(res)
+        // dispatch(setUserData(res.data.name, res.data.avatar, res.data._id))
         dispatch(isLogedInAC(true));
     } catch (e) {
         const error = e.response
@@ -102,7 +103,7 @@ export const logoutTC = (): ThunkAuthType => async (dispatch) => {
     }
 }
 
-export const authMeTC = (): ThunkAuthType => async (dispatch, getState) => {
+export const authMeTC = (): ThunkAuthType => async (dispatch) => {
     try {
         dispatch(setIsFetchingAC(true));
         const res = await authApi.me();
