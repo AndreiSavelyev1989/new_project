@@ -37,7 +37,7 @@ export const Routes = () => {
                 <Route path={PATH.TEST} render={() => <Test/>}/>
                 <Route path={PATH.PACKS} render={() => <Packs/>}/>
                 <Route path={`${PATH.CARDS}/:cardsPackId`} render={() => <Cards/>}/>
-                <Route path={PATH.LEARN} render={() => <Learn/>}/>
+                <Route path={`${PATH.LEARN}/:cardsPackId`} render={() => <Learn/>}/>
                 <Route render={() => <Error404/>}/>
             </Switch>
         </div>

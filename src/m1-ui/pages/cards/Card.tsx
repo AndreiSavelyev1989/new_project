@@ -12,6 +12,7 @@ import ModalContainer from './ModalContainer';
 import { useFormik } from 'formik';
 import { AppRootStateType } from '../../../m2-bll/state/store';
 
+
 type PropsType = {
   id: string;
   question?: string;
@@ -79,7 +80,6 @@ export const Card: React.FC<PropsType> = ({
           <button data-id={id} onClick={delCardClick} disabled={userId !== userAuthId}>
             Del
           </button>
-          <NavLink to={PATH.LEARN + '/' + id}>learn</NavLink>
         </td>
         <td className={s['table__cell']}>
           <button

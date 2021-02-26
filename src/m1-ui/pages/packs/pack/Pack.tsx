@@ -24,7 +24,6 @@ export const Pack: React.FC<PropsType> = (props) => {
     if (props.id) {
       dispatch(deleteCardPack(props.id));
     }
-  };
 
   const onClickUpdateHandler = () => {
     props.onUpdate();
