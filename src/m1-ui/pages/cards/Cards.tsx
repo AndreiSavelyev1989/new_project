@@ -44,12 +44,17 @@ export const Cards = () => {
   const hideModal = () => {
     setIsShowModal(false);
   };
+  const userAuthId = useSelector<AppRootStateType, string>(
+    (state) => state.auth.authUserData.userId
+  );
+  console.log(cards);
 
   const fieldsWithCards = cards.map((card: CardsType) => {
     return (
       <Card
         key={card._id}
         id={card._id}
+        userId={card.user_id}
         question={card.question}
         answer={card.answer}
         grade={card.grade}
@@ -126,6 +131,7 @@ export const Cards = () => {
                       setIsShowModal(true);
                       setIsComponentVisible(true);
                     }}
+                    // disabled={userId !== userAuthId}
                   >
                     Add
                   </button>
