@@ -1,6 +1,6 @@
 import s from './cards.module.css';
 import style from './../../../assets/style/Common.module.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { delCard, updateCard } from '../../../m2-bll/redusers/cards-reducer';
 import { PATH } from '../../routes/Routes';
 import { NavLink } from 'react-router-dom';
@@ -10,6 +10,7 @@ import CommonInput from '../../../common/c1-CommonInput/CommonInput';
 import CommonButton from '../../../common/c2-CommonButton/CommonButton';
 import ModalContainer from './ModalContainer';
 import { useFormik } from 'formik';
+import { AppRootStateType } from '../../../m2-bll/state/store';
 
 type PropsType = {
   id: string;
@@ -19,6 +20,7 @@ type PropsType = {
   questionImg?: string;
   cardsPackId: string;
   grade?: number;
+  userId: string | undefined;
 };
 
 export const Card: React.FC<PropsType> = ({
@@ -29,12 +31,16 @@ export const Card: React.FC<PropsType> = ({
   updated,
   questionImg,
   cardsPackId,
+  userId,
 }) => {
   const dispatch = useDispatch();
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
   const hideModal = () => {
     setIsShowModal(false);
   };
+  const userAuthId = useSelector<AppRootStateType, string>(
+    (state) => state.auth.authUserData.userId
+  );
   const {
     ref,
     isComponentVisible,
@@ -54,7 +60,6 @@ export const Card: React.FC<PropsType> = ({
     },
 
     onSubmit: (values, e) => {
-      //@ts-ignore
       dispatch(updateCard(id, cardsPackId, values.question, values.answer));
       values.question = '';
       values.answer = '';
@@ -71,7 +76,7 @@ export const Card: React.FC<PropsType> = ({
         <td className={s['table__cell']}>{updated}</td>
         <td className={s['table__cell']}>{questionImg}</td>
         <td className={s['table__cell']}>
-          <button data-id={id} onClick={delCardClick}>
+          <button data-id={id} onClick={delCardClick} disabled={userId !== userAuthId}>
             Del
           </button>
           <NavLink to={PATH.LEARN + '/' + id}>learn</NavLink>
@@ -82,6 +87,7 @@ export const Card: React.FC<PropsType> = ({
               setIsShowModal(true);
               setIsComponentVisible(true);
             }}
+            disabled={userId !== userAuthId}
           >
             Update
           </button>
