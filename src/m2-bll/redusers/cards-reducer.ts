@@ -32,15 +32,12 @@ export type CardsType = {
   _id: string;
 };
 
-export type SetIsFetchingCardsType = {
-  type: typeof SET_IS_FETCHING;
-};
-
 type ActionsType =
-  | GetCardsType
-  | SetIsFetchingCardsType
+  | ReturnType<typeof GetCards>
+  | ReturnType<typeof setIsFetchingCardsAC>
   | ReturnType<typeof setTotalCardsCount>
-  | ReturnType<typeof setCurrentPage>;
+  | ReturnType<typeof setCurrentPage>
+  | ReturnType<typeof setUserId>;
 
 export type StateCardsType = {
   cards: Array<CardsType>;
@@ -50,6 +47,7 @@ export type StateCardsType = {
   pageSize: number;
   currentPage: number;
   portionSize: number;
+  userId: string;
 };
 
 type ThunkCardType = ThunkAction<void, AppRootStateType, unknown, ActionsType>;
@@ -63,15 +61,18 @@ export const setTotalCardsCount = (totalCardsCount: number) =>
   } as const);
 export const setCurrentPage = (page: number) =>
   ({ type: 'SET_CURRENT_PAGE', page } as const);
+export const setUserId = (userId: string) =>
+  ({ type: 'SET_USER_ID', userId } as const);
 
 export const GetCards = (
   packId: string,
   cards: Array<CardsType>
-): GetCardsType => ({
-  type: GET_CARDS,
-  packId,
-  cards,
-});
+): GetCardsType =>
+  ({
+    type: GET_CARDS,
+    packId,
+    cards,
+  } as const);
 
 const initialState = {
   cards: [],
@@ -81,6 +82,7 @@ const initialState = {
   pageSize: 5,
   currentPage: 1,
   portionSize: 4,
+  userId: '',
 };
 
 export const cardsReducer = (
@@ -104,6 +106,11 @@ export const cardsReducer = (
         ...state,
         currentPage: action.page,
       };
+    case 'SET_USER_ID':
+      return {
+        ...state,
+        userId: action.userId,
+      };
     default:
       return state;
   }
@@ -117,8 +124,10 @@ export const getCardsByPackId = (
   try {
     dispatch(setIsFetchingCardsAC());
     cardsAPI.getCards(cardsPackId, page, pageCount).then((res) => {
+      console.log(res);
       dispatch(GetCards(cardsPackId, res.data.cards));
       dispatch(setTotalCardsCount(res.data.cardsTotalCount));
+      dispatch(setUserId(res.data.packUserId));
       dispatch(setIsFetchingCardsAC());
     });
   } catch (e) {
