@@ -52,7 +52,8 @@ export const Pack: React.FC<PropsType> = (props) => {
           </button>
         </div>
         <div className={s.tableItem}>
-          <NavLink to={PATH.CARDS + '/' + props.id}>CARDS</NavLink>
+          <NavLink to={PATH.CARDS + '/' + props.id}>Cards</NavLink>
+          <NavLink to={PATH.LEARN + '/' + props.id}>Learn</NavLink>
         </div>
       </div>
     </div>
