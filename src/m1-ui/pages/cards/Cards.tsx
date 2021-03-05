@@ -44,8 +44,8 @@ export const Cards = () => {
   const hideModal = () => {
     setIsShowModal(false);
   };
-  const userAuthId = useSelector<AppRootStateType, string>(
-    (state) => state.auth.authUserData.userId
+  const userAuthId = useSelector<AppRootStateType, string | undefined>(
+    (state) => state.profile.profile._id
   );
   const cardsPackUserId = useSelector<AppRootStateType, string>(
     (state) => state.cards.userId
@@ -63,6 +63,7 @@ export const Cards = () => {
         updated={card.updated}
         cardsPackId={cardsPackId}
         questionImg={card.questionImg}
+        userAuthId={userAuthId}
       />
     );
   });

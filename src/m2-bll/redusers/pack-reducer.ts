@@ -1,5 +1,5 @@
 import {cardsPackAPI} from "../../m3-dal/api";
-import {ActionLoginType, authMeTC, setErrorAC, setIsFetchingAC} from "./auth-reducer";
+import {ActionLoginType, setErrorAC, setIsFetchingAC} from "./auth-reducer";
 import {ThunkAction} from "redux-thunk";
 import {AppRootStateType} from "../state/store";
 
@@ -40,6 +40,7 @@ export const setTotalCardPacksCount = (totalCardPacksCount: number) => ({
     totalCardPacksCount
 } as const)
 export const setCurrentPage = (page: number) => ({type: "pack/SET_CURRENT_PAGE", page} as const)
+export const removePack = (packId: string) => ({type: "pack/REMOVE_PACK", packId} as const)
 
 type ActionPacksType =
     | ActionLoginType
@@ -47,15 +48,16 @@ type ActionPacksType =
     | ReturnType<typeof setErrorAC>
     | ReturnType<typeof setTotalCardPacksCount>
     | ReturnType<typeof setCurrentPage>
+    | ReturnType<typeof removePack>
 
 type ThunkPacksType = ThunkAction<void, AppRootStateType, unknown, ActionPacksType>
 
-//reducers
+//reducer
 export const cardPackReducer = (state = initialState, action: ActionPacksType): CardsPackInitialStateType => {
     switch (action.type) {
-        case "pack/SET-PACKS": {
+        case "pack/SET-PACKS":
             return {...state, cardsPack: action.setPack}
-        }
+
         case "pack/SET_TOTAL_CARD_PACKS_COUNT":
             return {
                 ...state, cardPacksTotalCount: action.totalCardPacksCount
@@ -63,6 +65,11 @@ export const cardPackReducer = (state = initialState, action: ActionPacksType): 
         case "pack/SET_CURRENT_PAGE":
             return {
                 ...state, currentPage: action.page
+            }
+        case "pack/REMOVE_PACK":
+            return {
+                ...state,
+                cardsPack: state.cardsPack.filter(pack => pack._id !== action.packId)
             }
         default:
             return state
@@ -72,7 +79,6 @@ export const cardPackReducer = (state = initialState, action: ActionPacksType): 
 export const getPacks = (page: number | undefined, pageCount: number | undefined): ThunkPacksType => async (dispatch) => {
     try {
         dispatch(setIsFetchingAC(true));
-        await dispatch(authMeTC())
         const res = await cardsPackAPI.getPacks(page, pageCount)
         dispatch(setCardsPacksAC(res.data.cardPacks))
         dispatch(setTotalCardPacksCount(res.data.cardPacksTotalCount))
@@ -112,8 +118,8 @@ export const deleteCardPack = (id: string, page?: number, pageCount?: number): T
     try {
         dispatch(setIsFetchingAC(true))
         await cardsPackAPI.deletePack(id)
-        dispatch(setCurrentPage(1))
-        dispatch(getPacks(page, pageCount))
+        dispatch(removePack(id))
+        // dispatch(getPacks(page, pageCount))
     } catch (e) {
         const error = e.response
             ? e.response.data.error
