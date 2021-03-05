@@ -27,6 +27,7 @@ export const PATH = {
 export const Routes = () => {
     return (
         <div className={style.commonBlock}>
+        <>
             <Switch>
                 <Route exact path={"/"} render={() => <Redirect to={PATH.PROFILE}/>}/>
                 <Route path={PATH.PROFILE} render={() => <Profile/>}/>
@@ -40,6 +41,7 @@ export const Routes = () => {
                 <Route path={`${PATH.LEARN}/:cardsPackId`} render={() => <Learn/>}/>
                 <Route render={() => <Error404/>}/>
             </Switch>
+        </>
         </div>
     )
 }

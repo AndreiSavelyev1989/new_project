@@ -22,6 +22,7 @@ type PropsType = {
   cardsPackId: string;
   grade?: number;
   userId: string | undefined;
+  userAuthId: string | undefined
 };
 
 export const Card: React.FC<PropsType> = ({
@@ -32,16 +33,14 @@ export const Card: React.FC<PropsType> = ({
   updated,
   questionImg,
   cardsPackId,
-  userId,
+  userId, userAuthId
 }) => {
   const dispatch = useDispatch();
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
   const hideModal = () => {
     setIsShowModal(false);
   };
-  const userAuthId = useSelector<AppRootStateType, string>(
-    (state) => state.auth.authUserData.userId
-  );
+
   const {
     ref,
     isComponentVisible,

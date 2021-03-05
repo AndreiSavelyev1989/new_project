@@ -5,3 +5,30 @@
     justify-content: space-around;
     align-items: center;
 }
+
+.nameBlock {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.hiddenText {
+    display: none;
+}
+.showText {
+    display: block;
+    text-transform: uppercase;
+    color: #3aa251;
+    font-weight: 700;
+    transition: 1.5s;
+}
+
+.editName {
+    padding: 15px;
+}
+
+.showName {
+    font-weight: 500;
+    font-size: 30px;
+}

@@ -11,7 +11,7 @@ type PropsType = {
   updated: string | undefined;
   url: string | undefined;
   id: string | undefined;
-  userAuthId: string;
+  userAuthId: string | undefined;
   user_id: string | undefined;
   onUpdate: () => void;
   cb: (id: string | undefined) => void;

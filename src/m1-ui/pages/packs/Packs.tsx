@@ -13,7 +13,7 @@ import {AppRootStateType} from '../../../m2-bll/state/store';
 import {Pack} from './pack/Pack';
 import {Preloader} from '../../preloader/Preloader';
 import {Pagination} from '../../../common/c4-Pagination/Pagination';
-import {authMeTC, initialAuthStateType} from '../../../m2-bll/redusers/auth-reducer';
+import {initialAuthStateType} from '../../../m2-bll/redusers/auth-reducer';
 import useComponentVisible from '../cards/useComponentVisible';
 import ModalContainer from '../cards/ModalContainer';
 import {useFormik} from 'formik';
@@ -22,6 +22,8 @@ import CommonInput from '../../../common/c1-CommonInput/CommonInput';
 import CommonButton from '../../../common/c2-CommonButton/CommonButton';
 import {Redirect} from 'react-router-dom';
 import {PATH} from "../../routes/Routes";
+import {LoginResponseType} from "../../../m3-dal/api";
+import {AiOutlineArrowDown, AiOutlineArrowUp} from "react-icons/all";
 
 type FormikErrorType = {
     packName?: string;
@@ -49,18 +51,21 @@ export const Packs = () => {
     const {isFetching, isLoggedIn} = useSelector<AppRootStateType, initialAuthStateType>(
         (state) => state.auth
     );
-    const userAuthId = useSelector<AppRootStateType, string>(
-        (state) => state.auth.authUserData.userId
+    const profile = useSelector<AppRootStateType, LoginResponseType>(state => state.profile.profile)
+    const userAuthId = useSelector<AppRootStateType, string | undefined>(
+        (state) => state.profile.profile._id
     );
-
     const onUpdate = () => {
         setIsShowModalDel(true);
         setIsComponentVisibleDel(true);
     };
 
     useEffect(() => {
+        if (!isLoggedIn) {
+            return
+        }
         dispatch(getPacks(currentPage, pageSize));
-    }, []);
+    }, [dispatch, isLoggedIn, packId]);
 
     const getPackIdFromPackComponent = (id: string | undefined) => {
         packId = id;
@@ -148,7 +153,7 @@ export const Packs = () => {
         },
     });
 
-    if (!isLoggedIn) {
+    if (!isLoggedIn || !profile) {
         return <Redirect to={PATH.LOGIN}/>
     }
 
@@ -166,7 +171,13 @@ export const Packs = () => {
                 />
                 <div className={s.tableContainer}>
                     <div className={s.tableItem}>Pack name</div>
-                    <div className={s.tableItem}>Cards count</div>
+                    <div className={s.tableItem}>
+                        <div>Cards count</div>
+                        <div className={s.sortButton}>
+                            <button className={s.sortButtonInc}><AiOutlineArrowUp/></button>
+                            <button className={s.sortButtonDec}><AiOutlineArrowDown/></button>
+                        </div>
+                    </div>
                     <div className={s.tableItem}>Updated</div>
                     <div className={s.tableItem}>Url</div>
                     <div className={s.tableItem}>

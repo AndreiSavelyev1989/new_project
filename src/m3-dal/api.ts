@@ -41,6 +41,12 @@ export type GetPacksResponseType = {
   tokenDeathTime: string;
 };
 
+export type meDataType = {
+  name: string
+  avatar: string
+  userId: string
+}
+
 //Auth api
 export const authApi = {
   login(data: LoginDataType) {
@@ -49,8 +55,8 @@ export const authApi = {
   me() {
     return instanceHeroku.post('auth/me');
   },
-  updateMe(name: string, avatar: string, userId: string) {
-    return instanceHeroku.put('auth/me', { name, avatar, userId });
+  updateMe(data: meDataType) {
+    return instanceHeroku.put('auth/me', data);
   },
   logout() {
     return instanceHeroku.delete('auth/me');
