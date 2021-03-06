@@ -3,6 +3,15 @@ import {ActionLoginType, setErrorAC, setIsFetchingAC} from "./auth-reducer";
 import {ThunkAction} from "redux-thunk";
 import {AppRootStateType} from "../state/store";
 
+export type CardsPackInitialStateType = {
+    cardsPack: CardPacksType[]
+    pageSize: number
+    currentPage: number
+    cardPacksTotalCount: number
+    portionSize: number
+    userPackId: string
+    sort: undefined | string
+}
 
 const initialState = {
     cardsPack: [] as CardPacksType[],
@@ -10,11 +19,12 @@ const initialState = {
     currentPage: 1,
     cardPacksTotalCount: 0,
     portionSize: 10,
-    userPackId: ''
+    userPackId: '',
+    sort: ''
 }
 
 //types
-export type CardsPackInitialStateType = typeof initialState
+
 export type CardPacksType = {
     _id?: string
     user_id?: string
@@ -41,6 +51,7 @@ export const setTotalCardPacksCount = (totalCardPacksCount: number) => ({
 } as const)
 export const setCurrentPage = (page: number) => ({type: "pack/SET_CURRENT_PAGE", page} as const)
 export const removePack = (packId: string) => ({type: "pack/REMOVE_PACK", packId} as const)
+export const setPacksSort = (sort: string | undefined) => ({type: "pack/SET_PACKS_SORT", sort} as const)
 
 type ActionPacksType =
     | ActionLoginType
@@ -49,11 +60,12 @@ type ActionPacksType =
     | ReturnType<typeof setTotalCardPacksCount>
     | ReturnType<typeof setCurrentPage>
     | ReturnType<typeof removePack>
+    | ReturnType<typeof setPacksSort>
 
 type ThunkPacksType = ThunkAction<void, AppRootStateType, unknown, ActionPacksType>
 
 //reducer
-export const cardPackReducer = (state = initialState, action: ActionPacksType): CardsPackInitialStateType => {
+export const cardPackReducer = (state: CardsPackInitialStateType = initialState, action: ActionPacksType): CardsPackInitialStateType => {
     switch (action.type) {
         case "pack/SET-PACKS":
             return {...state, cardsPack: action.setPack}
@@ -71,15 +83,20 @@ export const cardPackReducer = (state = initialState, action: ActionPacksType): 
                 ...state,
                 cardsPack: state.cardsPack.filter(pack => pack._id !== action.packId)
             }
+        case "pack/SET_PACKS_SORT":
+            return  {
+                ...state,
+                sort: action.sort
+            }
         default:
             return state
     }
 }
 //thunks
-export const getPacks = (page: number | undefined, pageCount: number | undefined): ThunkPacksType => async (dispatch) => {
+export const getPacks = (page: number | undefined, pageCount: number | undefined, sort: string | undefined): ThunkPacksType => async (dispatch) => {
     try {
         dispatch(setIsFetchingAC(true));
-        const res = await cardsPackAPI.getPacks(page, pageCount)
+        const res = await cardsPackAPI.getPacks(page, pageCount, sort)
         dispatch(setCardsPacksAC(res.data.cardPacks))
         dispatch(setTotalCardPacksCount(res.data.cardPacksTotalCount))
         console.log(res)
@@ -96,12 +113,12 @@ export const getPacks = (page: number | undefined, pageCount: number | undefined
 };
 
 
-export const createNewPack = (cardPack: CardPacksType, page?: number, pageCount?: number): ThunkPacksType => async (dispatch) => {
+export const createNewPack = (cardPack: CardPacksType, page?: number, pageCount?: number, sort?: string): ThunkPacksType => async (dispatch) => {
     try {
         dispatch(setIsFetchingAC(true));
         await cardsPackAPI.createPack(cardPack)
         dispatch(setCurrentPage(1))
-        dispatch(getPacks(page, pageCount))
+        dispatch(getPacks(page, pageCount, sort))
     } catch (e) {
         const error = e.response
             ? e.response.data.error
@@ -132,12 +149,12 @@ export const deleteCardPack = (id: string, page?: number, pageCount?: number): T
     }
 }
 
-export const updateCardPack = (cardPack: CardPacksType, page?: number, pageCount?: number): ThunkPacksType => async (dispatch) => {
+export const updateCardPack = (cardPack: CardPacksType, page?: number, pageCount?: number, sort?: string): ThunkPacksType => async (dispatch) => {
     try {
         dispatch(setIsFetchingAC(true));
         await cardsPackAPI.updatePack(cardPack)
         dispatch(setCurrentPage(1))
-        dispatch(getPacks(page, pageCount))
+        dispatch(getPacks(page, pageCount, sort))
     } catch (e) {
         const error = e.response
             ? e.response.data.error

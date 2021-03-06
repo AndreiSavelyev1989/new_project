@@ -12,11 +12,8 @@ export const App = () => {
 
     useEffect(() => {
         dispatch(authMeTC())
-    }, [])
+    }, [isInitialized])
 
-    if (!isInitialized) {
-
-    }
     return (
         <>
             <Navbar/>
