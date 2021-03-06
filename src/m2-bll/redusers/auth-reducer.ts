@@ -74,26 +74,47 @@ export const logoutTC = (): ThunkAuthType => async (dispatch) => {
     }
 }
 
-export const authMeTC = (): ThunkAuthType => async (dispatch) => {
-    try {
-        dispatch(setIsFetchingAC(true));
-        const res = await authApi.me();
-        dispatch(setProfileAC(res.data))
-        dispatch(isLogedInAC(true));
-    }
-    catch (e) {
-        const error = e.response
-            ? e.response.data.error
-            : (e.message + ', more details in the console');
-        dispatch(setErrorAC(error));
-        console.log('Error: ', {...e});
-        return console.log(error);
-    }
-    finally {
-        dispatch(setIsFetchingAC(false));
-        dispatch(setIsInitializedApp(true))
-    }
+export const authMeTC = (): ThunkAuthType => (dispatch) => {
+    dispatch(setIsFetchingAC(true));
+    authApi.me()
+        .then(res => {
+            dispatch(setProfileAC(res.data))
+            dispatch(isLogedInAC(true));
+        })
+        .catch(e => {
+            const error = e.response
+                ? e.response.data.error
+                : (e.message + ', more details in the console');
+            dispatch(setErrorAC(error));
+            console.log('Error: ', {...e});
+            dispatch(isLogedInAC(false));
+            return console.log(error);
+        })
+        .finally(() => {
+            dispatch(setIsFetchingAC(false));
+            dispatch(setIsInitializedApp(true))
+        })
 }
+// export const authMeTC = (): ThunkAuthType => async (dispatch) => {
+//     try {
+//         dispatch(setIsFetchingAC(true));
+//         const res = await authApi.me();
+//         dispatch(setProfileAC(res.data))
+//         dispatch(isLogedInAC(true));
+//     }
+//     catch (e) {
+//         const error = e.response
+//             ? e.response.data.error
+//             : (e.message + ', more details in the console');
+//         dispatch(setErrorAC(error));
+//         console.log('Error: ', {...e});
+//         return console.log(error);
+//     }
+//     finally {
+//         dispatch(setIsFetchingAC(false));
+//         dispatch(setIsInitializedApp(true))
+//     }
+// }
 
 
 

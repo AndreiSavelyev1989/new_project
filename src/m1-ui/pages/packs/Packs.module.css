@@ -18,6 +18,7 @@
 
 .tableItem {
     width: 20%;
+    min-height: 80px;
     border: 1px solid;
     display: flex;
     justify-content: space-around;
@@ -29,10 +30,21 @@
 .sortButton {
     display: flex;
     flex-direction: column;
+    justify-content: start;
+}
+
+.sortButtonActive {
+    background-color: #3aa251;
+    outline: none;
+    margin: 2.5px;
+}
+
+.sortButtonInc {
+    margin: 2.5px;
 }
 
 .sortButtonDec {
-    margin-top: 5px;
+    margin: 2.5px;
 }
 
 .modal {

@@ -6,7 +6,7 @@ import {
     CardsPackInitialStateType,
     createNewPack,
     getPacks,
-    setCurrentPage,
+    setCurrentPage, setPacksSort,
     updateCardPack,
 } from '../../../m2-bll/redusers/pack-reducer';
 import {AppRootStateType} from '../../../m2-bll/state/store';
@@ -45,6 +45,7 @@ export const Packs = () => {
         portionSize,
         currentPage,
         pageSize,
+        sort
     } = useSelector<AppRootStateType, CardsPackInitialStateType>(
         (state) => state.packs
     );
@@ -55,22 +56,58 @@ export const Packs = () => {
     const userAuthId = useSelector<AppRootStateType, string | undefined>(
         (state) => state.profile.profile._id
     );
-    const onUpdate = () => {
-        setIsShowModalDel(true);
-        setIsComponentVisibleDel(true);
-    };
+    const [isShowModal, setIsShowModal] = useState<boolean>(false);
+    const [isShowModalDel, setIsShowModalDel] = useState<boolean>(false);
+    const [sortArrowUp, setSortArrowUp] = useState(false)
+    const [sortArrowDown, setSortArrowDown] = useState(false)
+
+    const {
+        ref,
+        isComponentVisible,
+        setIsComponentVisible,
+    } = useComponentVisible(false);
+
+    const {
+        ref: ref2,
+        isComponentVisible: isComponentVisible2,
+        setIsComponentVisible: setIsComponentVisibleDel,
+    } = useComponentVisible(false);
 
     useEffect(() => {
         if (!isLoggedIn) {
             return
         }
-        dispatch(getPacks(currentPage, pageSize));
-    }, [dispatch, isLoggedIn, packId]);
+        dispatch(getPacks(currentPage, pageSize, sort));
+    }, [dispatch, isLoggedIn, packId, sort]);
 
     const getPackIdFromPackComponent = (id: string | undefined) => {
         packId = id;
     };
 
+    const onUpdate = () => {
+        setIsShowModalDel(true);
+        setIsComponentVisibleDel(true);
+    };
+    const onCurrentPage = (pageNumber: any) => {
+        dispatch(setCurrentPage(pageNumber));
+        dispatch(getPacks(pageNumber, pageSize, sort));
+    };
+    const onSortUp = () => {
+        dispatch(setPacksSort("0cardsCount"))
+        setSortArrowUp(true)
+        setSortArrowDown(false)
+    }
+    const onSortDown = () => {
+        dispatch(setPacksSort("1cardsCount"))
+        setSortArrowDown(true)
+        setSortArrowUp(false)
+    }
+    const hideModal = () => {
+        setIsShowModal(false);
+    };
+    const hideModalDel = () => {
+        setIsShowModalDel(false);
+    };
     const mappedPacks = packs.map((p) => {
         return (
             <Pack
@@ -87,31 +124,6 @@ export const Packs = () => {
             />
         );
     });
-
-    const onCurrentPage = (pageNumber: any) => {
-        dispatch(setCurrentPage(pageNumber));
-        dispatch(getPacks(pageNumber, pageSize));
-    };
-
-    const [isShowModal, setIsShowModal] = useState<boolean>(false);
-    const [isShowModalDel, setIsShowModalDel] = useState<boolean>(false);
-    const hideModal = () => {
-        setIsShowModal(false);
-    };
-    const hideModalDel = () => {
-        setIsShowModalDel(false);
-    };
-    const {
-        ref,
-        isComponentVisible,
-        setIsComponentVisible,
-    } = useComponentVisible(false);
-
-    const {
-        ref: ref2,
-        isComponentVisible: isComponentVisible2,
-        setIsComponentVisible: setIsComponentVisibleDel,
-    } = useComponentVisible(false);
 
     const formik = useFormik({
         initialValues: {
@@ -174,8 +186,8 @@ export const Packs = () => {
                     <div className={s.tableItem}>
                         <div>Cards count</div>
                         <div className={s.sortButton}>
-                            <button className={s.sortButtonInc}><AiOutlineArrowUp/></button>
-                            <button className={s.sortButtonDec}><AiOutlineArrowDown/></button>
+                            <button className={sortArrowUp ? s.sortButtonActive : s.sortButtonInc} onClick={onSortUp}><AiOutlineArrowUp/></button>
+                            <button className={sortArrowDown ? s.sortButtonActive : s.sortButtonDec} onClick={onSortDown}><AiOutlineArrowDown/></button>
                         </div>
                     </div>
                     <div className={s.tableItem}>Updated</div>
