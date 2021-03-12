@@ -21,9 +21,11 @@ export const Navbar = () => {
                 <nav className={sidebar ? `${style.navMenu} ${style.active}` : style.navMenu}>
                     <ul className={style.navMenuItems} onClick={showSidebar}>
                         <li className={style.navbarToggle}>
-                            <NavLink to={"#"} className={style.menuBars}>
-                                <VscChromeClose/>
-                            </NavLink>
+                            <IconContext.Provider value={{color: 'red'}}>
+                                <NavLink to={"#"} className={style.menuBars}>
+                                    <VscChromeClose/>
+                                </NavLink>
+                            </IconContext.Provider>
                         </li>
                         {sidebarData.map((item, index) => {
                             return (

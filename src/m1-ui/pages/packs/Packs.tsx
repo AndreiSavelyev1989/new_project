@@ -6,7 +6,9 @@ import {
     CardsPackInitialStateType,
     createNewPack,
     getPacks,
-    setCurrentPage, setIsPrivat, setPacksSort,
+    setCurrentPage,
+    setIsPrivat, setPackName,
+    setPacksSort,
     updateCardPack,
 } from '../../../m2-bll/redusers/pack-reducer';
 import {AppRootStateType} from '../../../m2-bll/state/store';
@@ -22,8 +24,9 @@ import CommonInput from '../../../common/c1-CommonInput/CommonInput';
 import CommonButton from '../../../common/c2-CommonButton/CommonButton';
 import {Redirect} from 'react-router-dom';
 import {PATH} from "../../routes/Routes";
-import {LoginResponseType} from "../../../m3-dal/api";
 import {AiOutlineArrowDown, AiOutlineArrowUp} from "react-icons/all";
+import {IconContext} from "react-icons";
+import {SettingsPacksPanel} from "./settings-packs-panel/SettingsPacksPanel";
 
 type FormikErrorType = {
     packName?: string;
@@ -46,14 +49,14 @@ export const Packs = () => {
         currentPage,
         pageSize,
         sort,
-        isPrivat
+        isPrivat,
+        packName
     } = useSelector<AppRootStateType, CardsPackInitialStateType>(
         (state) => state.packs
     );
     const {isFetching, isLoggedIn} = useSelector<AppRootStateType, initialAuthStateType>(
         (state) => state.auth
     );
-    const profile = useSelector<AppRootStateType, LoginResponseType>(state => state.profile.profile)
     const userAuthId = useSelector<AppRootStateType, string | undefined>(
         (state) => state.profile.profile._id
     );
@@ -61,6 +64,7 @@ export const Packs = () => {
     const [isShowModalDel, setIsShowModalDel] = useState<boolean>(false);
     const [sortArrowUp, setSortArrowUp] = useState(false)
     const [sortArrowDown, setSortArrowDown] = useState(false)
+    const [searchPackName, setSearchPackName] = useState("")
 
     const {
         ref,
@@ -83,7 +87,7 @@ export const Packs = () => {
         } else {
             dispatch(getPacks(currentPage, pageSize, ""));
         }
-    }, [dispatch,isLoggedIn, sort, isPrivat, currentPage]);
+    }, [dispatch, isLoggedIn, sort, isPrivat, currentPage, packName]);
 
     const getPackIdFromPackComponent = (id: string | undefined) => {
         packId = id;
@@ -109,6 +113,20 @@ export const Packs = () => {
 
     const onPrivatHandler = () => {
         dispatch(setIsPrivat(!isPrivat))
+        dispatch(setPacksSort(""))
+        dispatch(setCurrentPage(1))
+        dispatch(setPackName(""))
+        setSearchPackName("")
+        setSortArrowDown(false)
+        setSortArrowUp(false)
+    }
+
+    const onSearchPacksByName = (name: string) => {
+        setSearchPackName(name)
+    }
+
+    const onSendSearchedPackName = () => {
+        dispatch(setPackName(searchPackName))
     }
 
     const hideModal = () => {
@@ -180,97 +198,103 @@ export const Packs = () => {
 
     return (
         <>
-            <div className={s.table}>
-                <h1 className={s.title}>Packs</h1>
-                <div className={s.privatPacks}>
-                    <input type={"checkbox"} onClick={onPrivatHandler}/><span>My packs</span>
-                </div>
-                <Pagination
-                    totalItemsCount={cardPacksTotalCount}
-                    pageSize={pageSize}
-                    currentPage={currentPage}
-                    onCurrentPage={onCurrentPage}
-                    portionSize={portionSize}
-                    isFetching={isFetching}
-                />
-                <div className={s.tableContainer}>
-                    <div className={s.tableItem}>Pack name</div>
-                    <div className={s.tableItem}>
-                        <div>Cards count</div>
-                        <div className={s.sortButton}>
-                            <button className={sortArrowUp ? s.sortButtonActive : s.sortButtonInc} onClick={onSortUp}>
-                                <AiOutlineArrowUp/></button>
-                            <button className={sortArrowDown ? s.sortButtonActive : s.sortButtonDec}
-                                    onClick={onSortDown}><AiOutlineArrowDown/></button>
+            <IconContext.Provider value={{color: '#283eae'}}>
+                <div className={s.table}>
+                    <h1 className={s.title}>Packs</h1>
+                    <SettingsPacksPanel
+                        value={searchPackName}
+                        onPrivatHandler={onPrivatHandler}
+                        onSearchPacksByName={onSearchPacksByName}
+                        onSendSearchedPackName={onSendSearchedPackName}/>
+                    <Pagination
+                        totalItemsCount={cardPacksTotalCount}
+                        pageSize={pageSize}
+                        currentPage={currentPage}
+                        onCurrentPage={onCurrentPage}
+                        portionSize={portionSize}
+                        isFetching={isFetching}
+                    />
+                    <div className={s.tableContainer}>
+                        <div className={s.tableItem}>Pack name</div>
+                        <div className={s.tableItem}>
+                            <div>Cards count</div>
+
+                            <div className={s.sortButton}>
+                                <button className={sortArrowUp ? s.sortButtonActive : s.sortButtonInc}
+                                        onClick={onSortUp}>
+                                    <AiOutlineArrowUp/></button>
+                                <button className={sortArrowDown ? s.sortButtonActive : s.sortButtonDec}
+                                        onClick={onSortDown}><AiOutlineArrowDown/></button>
+                            </div>
                         </div>
+                        <div className={s.tableItem}>Updated</div>
+                        <div className={s.tableItem}>Url</div>
+                        <div className={s.tableItem}>
+                            <button
+                                onClick={() => {
+                                    setIsShowModal(true);
+                                    setIsComponentVisible(true);
+                                }}
+                            >
+                                add
+                            </button>
+                        </div>
+                        <div className={s.tableItem}>Go to link</div>
                     </div>
-                    <div className={s.tableItem}>Updated</div>
-                    <div className={s.tableItem}>Url</div>
-                    <div className={s.tableItem}>
-                        <button
-                            onClick={() => {
-                                setIsShowModal(true);
-                                setIsComponentVisible(true);
-                            }}
-                        >
-                            add
-                        </button>
-                    </div>
-                    <div className={s.tableItem}>Go to link</div>
+                    {isFetching ? <Preloader/> : mappedPacks}
                 </div>
-                {isFetching ? <Preloader/> : mappedPacks}
-            </div>
 
-            <div className={s.modal} ref={ref}>
-                {isComponentVisible && (
-                    <ModalContainer show={isShowModal} closeCB={hideModal}>
-                        <div className={style.commonContainer}>
-                            <h2 className={style.title}>Add Pack</h2>
-                            <form className={style.formBlock} onSubmit={formik.handleSubmit}>
-                                <CommonInput
-                                    type={'text'}
-                                    label={'Pack Name'}
-                                    formikFieldsProps={{...formik.getFieldProps('packName')}}
-                                />
+                <div className={s.modal} ref={ref}>
+                    {isComponentVisible && (
+                        <ModalContainer show={isShowModal} closeCB={hideModal}>
+                            <div className={style.commonContainer}>
+                                <h2 className={style.title}>Add Pack</h2>
+                                <form className={style.formBlock} onSubmit={formik.handleSubmit}>
+                                    <CommonInput
+                                        type={'text'}
+                                        label={'Pack Name'}
+                                        formikFieldsProps={{...formik.getFieldProps('packName')}}
+                                    />
 
-                                {formik.touched.packName && formik.errors.packName ? (
-                                    <div className={style.registrationError}>
-                                        {formik.errors.packName}
-                                    </div>
-                                ) : null}
-                                <CommonButton type={'submit'} name={'Add pack'}/>
-                            </form>
-                        </div>
-                    </ModalContainer>
-                )}
-            </div>
+                                    {formik.touched.packName && formik.errors.packName ? (
+                                        <div className={style.registrationError}>
+                                            {formik.errors.packName}
+                                        </div>
+                                    ) : null}
+                                    <CommonButton type={'submit'} name={'Add pack'}/>
+                                </form>
+                            </div>
+                        </ModalContainer>
+                    )}
+                </div>
 
-            <div className={s.modal} ref={ref2}>
-                {isComponentVisible2 && (
-                    <ModalContainer show={isShowModalDel} closeCB={hideModalDel}>
-                        <div className={style.commonContainer}>
-                            <h2 className={style.title}>Update Pack</h2>
-                            <form className={style.formBlock} onSubmit={formik2.handleSubmit}>
-                                <CommonInput
-                                    type={'text'}
-                                    label={'Pack Name'}
-                                    formikFieldsProps={{
-                                        ...formik2.getFieldProps('updatePackName'),
-                                    }}
-                                />
+                <div className={s.modal} ref={ref2}>
+                    {isComponentVisible2 && (
+                        <ModalContainer show={isShowModalDel} closeCB={hideModalDel}>
+                            <div className={style.commonContainer}>
+                                <h2 className={style.title}>Update Pack</h2>
+                                <form className={style.formBlock} onSubmit={formik2.handleSubmit}>
+                                    <CommonInput
+                                        type={'text'}
+                                        label={'Pack Name'}
+                                        formikFieldsProps={{
+                                            ...formik2.getFieldProps('updatePackName'),
+                                        }}
+                                    />
 
-                                {formik2.touched.updatePackName &&
-                                formik2.errors.updatePackName ? (
-                                    <div className={style.registrationError}>
-                                        {formik2.errors.updatePackName}
-                                    </div>
-                                ) : null}
-                                <CommonButton type={'submit'} name={'Update pack'}/>
-                            </form>
-                        </div>
-                    </ModalContainer>
-                )}
-            </div>
+                                    {formik2.touched.updatePackName &&
+                                    formik2.errors.updatePackName ? (
+                                        <div className={style.registrationError}>
+                                            {formik2.errors.updatePackName}
+                                        </div>
+                                    ) : null}
+                                    <CommonButton type={'submit'} name={'Update pack'}/>
+                                </form>
+                            </div>
+                        </ModalContainer>
+                    )}
+                </div>
+            </IconContext.Provider>
         </>
     );
 };
