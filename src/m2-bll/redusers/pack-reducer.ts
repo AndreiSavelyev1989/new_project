@@ -11,16 +11,18 @@ export type CardsPackInitialStateType = {
     portionSize: number
     userPackId: string
     sort: undefined | string
+    isPrivat: boolean
 }
 
-const initialState = {
+const initialState: CardsPackInitialStateType = {
     cardsPack: [] as CardPacksType[],
     pageSize: 4,
     currentPage: 1,
     cardPacksTotalCount: 0,
     portionSize: 10,
     userPackId: '',
-    sort: ''
+    sort: '',
+    isPrivat: false
 }
 
 //types
@@ -51,7 +53,9 @@ export const setTotalCardPacksCount = (totalCardPacksCount: number) => ({
 } as const)
 export const setCurrentPage = (page: number) => ({type: "pack/SET_CURRENT_PAGE", page} as const)
 export const removePack = (packId: string) => ({type: "pack/REMOVE_PACK", packId} as const)
+export const addPack = (cardPack: CardPacksType) => ({type: "pack/ADD_PACK", cardPack} as const)
 export const setPacksSort = (sort: string | undefined) => ({type: "pack/SET_PACKS_SORT", sort} as const)
+export const setIsPrivat = (isPrivat: boolean) => ({type: "pack/SET_IS_PRIVAT", isPrivat} as const)
 
 type ActionPacksType =
     | ActionLoginType
@@ -60,7 +64,9 @@ type ActionPacksType =
     | ReturnType<typeof setTotalCardPacksCount>
     | ReturnType<typeof setCurrentPage>
     | ReturnType<typeof removePack>
+    | ReturnType<typeof addPack>
     | ReturnType<typeof setPacksSort>
+    | ReturnType<typeof setIsPrivat>
 
 type ThunkPacksType = ThunkAction<void, AppRootStateType, unknown, ActionPacksType>
 
@@ -83,20 +89,32 @@ export const cardPackReducer = (state: CardsPackInitialStateType = initialState,
                 ...state,
                 cardsPack: state.cardsPack.filter(pack => pack._id !== action.packId)
             }
+        case "pack/ADD_PACK":
+            return {
+                ...state,
+                cardsPack: [action.cardPack, ...state.cardsPack]
+            }
         case "pack/SET_PACKS_SORT":
-            return  {
+            return {
                 ...state,
                 sort: action.sort
+            }
+        case "pack/SET_IS_PRIVAT":
+            return {
+                ...state,
+                isPrivat: action.isPrivat
             }
         default:
             return state
     }
 }
 //thunks
-export const getPacks = (page: number | undefined, pageCount: number | undefined, sort: string | undefined): ThunkPacksType => async (dispatch) => {
+export const getPacks = (page: number | undefined, pageCount: number | undefined, userId?: string): ThunkPacksType => async (dispatch, getState) => {
+    const sort = getState().packs.sort
+
+    dispatch(setIsFetchingAC(true));
     try {
-        dispatch(setIsFetchingAC(true));
-        const res = await cardsPackAPI.getPacks(page, pageCount, sort)
+        const res = await cardsPackAPI.getPacks(page, pageCount, sort, userId)
         dispatch(setCardsPacksAC(res.data.cardPacks))
         dispatch(setTotalCardPacksCount(res.data.cardPacksTotalCount))
         console.log(res)
@@ -113,12 +131,22 @@ export const getPacks = (page: number | undefined, pageCount: number | undefined
 };
 
 
-export const createNewPack = (cardPack: CardPacksType, page?: number, pageCount?: number, sort?: string): ThunkPacksType => async (dispatch) => {
+export const createNewPack = (cardPack: CardPacksType): ThunkPacksType => async (dispatch, getState) => {
+    const page = getState().packs.currentPage
+    const pageCount = getState().packs.pageSize
+    const isPrivat = getState().packs.isPrivat
+    const userId = getState().profile.profile._id
+
     try {
         dispatch(setIsFetchingAC(true));
         await cardsPackAPI.createPack(cardPack)
-        dispatch(setCurrentPage(1))
-        dispatch(getPacks(page, pageCount, sort))
+        dispatch(addPack(cardPack))
+        if(isPrivat){
+            dispatch(getPacks(page, pageCount, userId))
+        }else {
+            dispatch(getPacks(page, pageCount, ""))
+        }
+        // dispatch(setCurrentPage(1))
     } catch (e) {
         const error = e.response
             ? e.response.data.error
@@ -131,12 +159,21 @@ export const createNewPack = (cardPack: CardPacksType, page?: number, pageCount?
     }
 }
 
-export const deleteCardPack = (id: string, page?: number, pageCount?: number): ThunkPacksType => async (dispatch) => {
+export const deleteCardPack = (id: string): ThunkPacksType => async (dispatch, getState) => {
+    const page = getState().packs.currentPage
+    const pageCount = getState().packs.pageSize
+    const isPrivat = getState().packs.isPrivat
+    const userId = getState().profile.profile._id
+
+    dispatch(setIsFetchingAC(true))
     try {
-        dispatch(setIsFetchingAC(true))
         await cardsPackAPI.deletePack(id)
         dispatch(removePack(id))
-        // dispatch(getPacks(page, pageCount))
+        if (isPrivat) {
+            dispatch(getPacks(page, pageCount, userId))
+        } else {
+            dispatch(getPacks(page, pageCount, ""))
+        }
     } catch (e) {
         const error = e.response
             ? e.response.data.error
@@ -153,8 +190,8 @@ export const updateCardPack = (cardPack: CardPacksType, page?: number, pageCount
     try {
         dispatch(setIsFetchingAC(true));
         await cardsPackAPI.updatePack(cardPack)
-        dispatch(setCurrentPage(1))
-        dispatch(getPacks(page, pageCount, sort))
+        // dispatch(setCurrentPage(1))
+        dispatch(getPacks(page, pageCount, ""))
     } catch (e) {
         const error = e.response
             ? e.response.data.error

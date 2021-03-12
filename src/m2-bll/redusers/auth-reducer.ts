@@ -2,7 +2,6 @@ import {authApi, LoginDataType} from "../../m3-dal/api";
 import {ThunkAction} from "redux-thunk";
 import {AppRootStateType} from "../state/store";
 import {setProfileAC} from "./profile-reducer";
-import {setIsInitializedApp} from "./app-reducer";
 
 export type initialAuthStateType = {
     isLoggedIn: boolean
@@ -42,7 +41,6 @@ export type ActionLoginType =
     | ReturnType<typeof setErrorAC>
     | ReturnType<typeof setIsFetchingAC>
     | ReturnType<typeof setProfileAC>
-    | ReturnType<typeof setIsInitializedApp>
 
 type ThunkAuthType = ThunkAction<void, AppRootStateType, unknown, ActionLoginType>
 //thunk
@@ -76,7 +74,7 @@ export const logoutTC = (): ThunkAuthType => async (dispatch) => {
 
 export const authMeTC = (): ThunkAuthType => (dispatch) => {
     dispatch(setIsFetchingAC(true));
-    authApi.me()
+     return authApi.me()
         .then(res => {
             dispatch(setProfileAC(res.data))
             dispatch(isLogedInAC(true));
@@ -92,7 +90,6 @@ export const authMeTC = (): ThunkAuthType => (dispatch) => {
         })
         .finally(() => {
             dispatch(setIsFetchingAC(false));
-            dispatch(setIsInitializedApp(true))
         })
 }
 // export const authMeTC = (): ThunkAuthType => async (dispatch) => {

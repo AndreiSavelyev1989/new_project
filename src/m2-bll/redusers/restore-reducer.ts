@@ -101,7 +101,7 @@ export const setNewPassword = (password: string, token: string) => async (dispat
         await restoreAPI.setNewPassword(password, token);
         dispatch(setIsFetchingAC(false))
         dispatch(successSubmit('Password has been changed'));
-        setTimeout(() => dispatch(setIsPasswordChanged(true)), 3000);
+        dispatch(setIsPasswordChanged(true));
     } catch (e) {
         dispatch(setIsFetchingAC(false))
         dispatch(failedSubmit(e.response.data.error, 'Error'));
