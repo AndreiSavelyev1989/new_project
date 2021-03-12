@@ -12,17 +12,19 @@ export type CardsPackInitialStateType = {
     userPackId: string
     sort: undefined | string
     isPrivat: boolean
+    packName: string | undefined
 }
 
 const initialState: CardsPackInitialStateType = {
     cardsPack: [] as CardPacksType[],
-    pageSize: 4,
+    pageSize: 6,
     currentPage: 1,
     cardPacksTotalCount: 0,
     portionSize: 10,
     userPackId: '',
     sort: '',
-    isPrivat: false
+    isPrivat: false,
+    packName: ''
 }
 
 //types
@@ -56,6 +58,7 @@ export const removePack = (packId: string) => ({type: "pack/REMOVE_PACK", packId
 export const addPack = (cardPack: CardPacksType) => ({type: "pack/ADD_PACK", cardPack} as const)
 export const setPacksSort = (sort: string | undefined) => ({type: "pack/SET_PACKS_SORT", sort} as const)
 export const setIsPrivat = (isPrivat: boolean) => ({type: "pack/SET_IS_PRIVAT", isPrivat} as const)
+export const setPackName = (packName: string | undefined) => ({type: "pack/SET_PACK_NAME", packName} as const)
 
 type ActionPacksType =
     | ActionLoginType
@@ -67,6 +70,7 @@ type ActionPacksType =
     | ReturnType<typeof addPack>
     | ReturnType<typeof setPacksSort>
     | ReturnType<typeof setIsPrivat>
+    | ReturnType<typeof setPackName>
 
 type ThunkPacksType = ThunkAction<void, AppRootStateType, unknown, ActionPacksType>
 
@@ -104,6 +108,11 @@ export const cardPackReducer = (state: CardsPackInitialStateType = initialState,
                 ...state,
                 isPrivat: action.isPrivat
             }
+        case "pack/SET_PACK_NAME":
+            return {
+                ...state,
+                packName: action.packName
+            }
         default:
             return state
     }
@@ -111,10 +120,11 @@ export const cardPackReducer = (state: CardsPackInitialStateType = initialState,
 //thunks
 export const getPacks = (page: number | undefined, pageCount: number | undefined, userId?: string): ThunkPacksType => async (dispatch, getState) => {
     const sort = getState().packs.sort
+    const packName = getState().packs.packName
 
     dispatch(setIsFetchingAC(true));
     try {
-        const res = await cardsPackAPI.getPacks(page, pageCount, sort, userId)
+        const res = await cardsPackAPI.getPacks(page, pageCount, sort, userId, packName)
         dispatch(setCardsPacksAC(res.data.cardPacks))
         dispatch(setTotalCardPacksCount(res.data.cardPacksTotalCount))
         console.log(res)
@@ -186,12 +196,20 @@ export const deleteCardPack = (id: string): ThunkPacksType => async (dispatch, g
     }
 }
 
-export const updateCardPack = (cardPack: CardPacksType, page?: number, pageCount?: number, sort?: string): ThunkPacksType => async (dispatch) => {
+export const updateCardPack = (cardPack: CardPacksType): ThunkPacksType => async (dispatch, getState) => {
+    const page = getState().packs.currentPage
+    const pageCount = getState().packs.pageSize
+    const isPrivat = getState().packs.isPrivat
+    const userId = getState().profile.profile._id
     try {
         dispatch(setIsFetchingAC(true));
         await cardsPackAPI.updatePack(cardPack)
-        // dispatch(setCurrentPage(1))
-        dispatch(getPacks(page, pageCount, ""))
+        if (isPrivat) {
+            dispatch(getPacks(page, pageCount, userId))
+        } else {
+            dispatch(getPacks(page, pageCount, ""))
+        }
+        dispatch(setCurrentPage(1))
     } catch (e) {
         const error = e.response
             ? e.response.data.error

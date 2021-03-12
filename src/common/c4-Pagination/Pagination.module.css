@@ -13,6 +13,7 @@
     margin-right: 5px;
     color: white;
     border: transparent;
+    box-shadow: 0 5px 10px #283eae;
 }
 
 .paginationButton {
@@ -35,13 +36,9 @@
     outline: none;
 }
 
-.paginationButton:hover {
-    background: #3aa251;
-    transition: 0.3s;
-}
-
-.navigationButton:hover {
+.paginationButton:hover, .navigationButton:hover  {
     background: #3aa251;
     transition: 0.3s;
     color: white;
+    box-shadow: 0 5px 10px #283eae;
 }
