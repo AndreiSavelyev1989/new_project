@@ -8,6 +8,13 @@
     margin-left: 20px;
 }
 
+.privatPacks {
+    width: 75%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
 .tableContainer {
     width: 75%;
     border: 1px solid;

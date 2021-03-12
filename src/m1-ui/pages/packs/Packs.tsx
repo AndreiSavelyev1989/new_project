@@ -6,7 +6,7 @@ import {
     CardsPackInitialStateType,
     createNewPack,
     getPacks,
-    setCurrentPage, setPacksSort,
+    setCurrentPage, setIsPrivat, setPacksSort,
     updateCardPack,
 } from '../../../m2-bll/redusers/pack-reducer';
 import {AppRootStateType} from '../../../m2-bll/state/store';
@@ -45,7 +45,8 @@ export const Packs = () => {
         portionSize,
         currentPage,
         pageSize,
-        sort
+        sort,
+        isPrivat
     } = useSelector<AppRootStateType, CardsPackInitialStateType>(
         (state) => state.packs
     );
@@ -77,8 +78,12 @@ export const Packs = () => {
         if (!isLoggedIn) {
             return
         }
-        dispatch(getPacks(currentPage, pageSize, sort));
-    }, [dispatch, isLoggedIn, packId, sort]);
+        if (isPrivat) {
+            dispatch(getPacks(currentPage, pageSize, userAuthId))
+        } else {
+            dispatch(getPacks(currentPage, pageSize, ""));
+        }
+    }, [dispatch,isLoggedIn, sort, isPrivat, currentPage]);
 
     const getPackIdFromPackComponent = (id: string | undefined) => {
         packId = id;
@@ -90,7 +95,6 @@ export const Packs = () => {
     };
     const onCurrentPage = (pageNumber: any) => {
         dispatch(setCurrentPage(pageNumber));
-        dispatch(getPacks(pageNumber, pageSize, sort));
     };
     const onSortUp = () => {
         dispatch(setPacksSort("0cardsCount"))
@@ -102,6 +106,11 @@ export const Packs = () => {
         setSortArrowDown(true)
         setSortArrowUp(false)
     }
+
+    const onPrivatHandler = () => {
+        dispatch(setIsPrivat(!isPrivat))
+    }
+
     const hideModal = () => {
         setIsShowModal(false);
     };
@@ -128,7 +137,7 @@ export const Packs = () => {
     const formik = useFormik({
         initialValues: {
             packName: '',
-            updatePackName: '',
+            updatePackName: ''
         },
         validate: (values) => {
             const errors: FormikErrorType = {};
@@ -165,7 +174,7 @@ export const Packs = () => {
         },
     });
 
-    if (!isLoggedIn || !profile) {
+    if (!isLoggedIn) {
         return <Redirect to={PATH.LOGIN}/>
     }
 
@@ -173,6 +182,9 @@ export const Packs = () => {
         <>
             <div className={s.table}>
                 <h1 className={s.title}>Packs</h1>
+                <div className={s.privatPacks}>
+                    <input type={"checkbox"} onClick={onPrivatHandler}/><span>My packs</span>
+                </div>
                 <Pagination
                     totalItemsCount={cardPacksTotalCount}
                     pageSize={pageSize}
@@ -186,8 +198,10 @@ export const Packs = () => {
                     <div className={s.tableItem}>
                         <div>Cards count</div>
                         <div className={s.sortButton}>
-                            <button className={sortArrowUp ? s.sortButtonActive : s.sortButtonInc} onClick={onSortUp}><AiOutlineArrowUp/></button>
-                            <button className={sortArrowDown ? s.sortButtonActive : s.sortButtonDec} onClick={onSortDown}><AiOutlineArrowDown/></button>
+                            <button className={sortArrowUp ? s.sortButtonActive : s.sortButtonInc} onClick={onSortUp}>
+                                <AiOutlineArrowUp/></button>
+                            <button className={sortArrowDown ? s.sortButtonActive : s.sortButtonDec}
+                                    onClick={onSortDown}><AiOutlineArrowDown/></button>
                         </div>
                     </div>
                     <div className={s.tableItem}>Updated</div>

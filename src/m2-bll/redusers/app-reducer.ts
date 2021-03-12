@@ -1,32 +1,44 @@
+import {ThunkAction} from "redux-thunk";
+import {AppRootStateType} from "../state/store";
+import {authMeTC} from "./auth-reducer";
+
 export type AppStateType = {
-    payload: {
-        isInitialized: boolean
-    }
+    isInitialized: boolean
+
 }
 
 const initialState: AppStateType = {
-    payload: {
-        isInitialized: false,
-    }
+    isInitialized: false,
 }
 
 //actions
-export type ActionsType = ReturnType<typeof setIsInitializedApp>
+export type ActionsAppType = ReturnType<typeof initializedSuccess>
 
 
-export const appReducer = (state: AppStateType = initialState, action: ActionsType) => {
+export const appReducer = (state: AppStateType = initialState, action: ActionsAppType) => {
     switch (action.type) {
-        case "app/SET_INITIALIZED_APP":
+        case "app/INITIALIZED_SUCCESS":
             return {
                 ...state,
-                isInitialized: action.payload
+                isInitialized: action.isInitialized
             }
         default:
             return state
     }
 }
 
-export const setIsInitializedApp = (isInitialized: boolean) => ({
-    type: "app/SET_INITIALIZED_APP",
-    payload: isInitialized
+export const initializedSuccess = (isInitialized: boolean) => ({
+    type: "app/INITIALIZED_SUCCESS",
+    isInitialized
 } as const)
+
+
+//thunks
+type ThunkAuthType = ThunkAction<void, AppRootStateType, unknown, ActionsAppType>
+export const initializeApp = (): ThunkAuthType => (dispatch) => {
+    let promise = dispatch(authMeTC())
+// @ts-ignore
+    promise.then(() => {
+        dispatch(initializedSuccess(true))
+    })
+}
