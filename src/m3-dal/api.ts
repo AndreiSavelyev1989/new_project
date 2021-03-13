@@ -13,9 +13,9 @@ const instanceHeroku = axios.create({
 
 //Cards Api
 export const cardsPackAPI = {
-  getPacks: async (page: number | undefined, pageCount: number | undefined, sort?: string | undefined, userId?: string, packName?: string | undefined) => {
+  getPacks: async (page: number | undefined, pageCount: number | undefined, sort?: string | undefined, userId?: string, packName?: string | undefined, min?: number, max?: number) => {
     return instanceHeroku.get<GetPacksResponseType>(
-      `cards/pack?page=${page}&pageCount=${pageCount}&sortPacks=${sort}&user_id=${userId}&packName=${packName}`
+      `cards/pack?page=${page}&pageCount=${pageCount}&sortPacks=${sort}&user_id=${userId}&packName=${packName}&min=${min}&max=${max}`
     );
   },
   createPack(cardsPack: CardPacksType) {

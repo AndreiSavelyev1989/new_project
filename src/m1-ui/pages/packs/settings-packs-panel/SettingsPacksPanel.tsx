@@ -1,5 +1,6 @@
 import style from "./SettingsPacksPanel.module.css";
 import React, {ChangeEvent} from "react";
+import {RangeSlider} from "../range-slider/RangeSlider";
 
 type PropsType = {
     value: string
@@ -25,11 +26,14 @@ export const SettingsPacksPanel: React.FC<PropsType> = (props) => {
     return (
         <div className={style.settingsPackContainer}>
             <div>
-                <input type={"checkbox"} onClick={onChangePrivatHandler}/><span>My packs</span>
+                <input type={"checkbox"} onClick={onChangePrivatHandler}/><span className={style.setCheck}>My packs</span>
+            </div>
+            <div className={style.rangeSlider}>
+                <RangeSlider />
             </div>
             <div className={style.input_style}>
                 Search:
-                <input  placeholder={'Pack name'} onChange={onPackNameHandler} value={props.value}/>
+                <input placeholder={'Pack name'} onChange={onPackNameHandler} value={props.value}/>
             </div>
             <button onClick={onSendPackNameHandler}>Search</button>
         </div>

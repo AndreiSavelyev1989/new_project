@@ -32,7 +32,7 @@ export const Navbar = () => {
                                 <li key={index} className={style.navText}>
                                     <Link to={item.path}>
                                         {item.icon}
-                                        <span>{item.title}</span>
+                                        <span className={style.navbarTitle}>{item.title}</span>
                                     </Link>
                                 </li>
                             )

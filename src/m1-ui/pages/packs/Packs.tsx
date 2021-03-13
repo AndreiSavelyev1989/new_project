@@ -5,7 +5,7 @@ import {
     CardPacksType,
     CardsPackInitialStateType,
     createNewPack,
-    getPacks,
+    getPacks, setCheckedCount,
     setCurrentPage,
     setIsPrivat, setPackName,
     setPacksSort,
@@ -50,7 +50,9 @@ export const Packs = () => {
         pageSize,
         sort,
         isPrivat,
-        packName
+        packName,
+        minCardsCount,
+        maxCardsCount
     } = useSelector<AppRootStateType, CardsPackInitialStateType>(
         (state) => state.packs
     );
@@ -60,11 +62,17 @@ export const Packs = () => {
     const userAuthId = useSelector<AppRootStateType, string | undefined>(
         (state) => state.profile.profile._id
     );
+    const checkedCardsCountArray = useSelector<AppRootStateType, number[] | number>(state => state.packs.checkedCount)
+    // @ts-ignore
+    let min = checkedCardsCountArray[0]
+    // @ts-ignore
+    let max = checkedCardsCountArray[1]
     const [isShowModal, setIsShowModal] = useState<boolean>(false);
     const [isShowModalDel, setIsShowModalDel] = useState<boolean>(false);
     const [sortArrowUp, setSortArrowUp] = useState(false)
     const [sortArrowDown, setSortArrowDown] = useState(false)
     const [searchPackName, setSearchPackName] = useState("")
+    const [checkedCardsCount, setCheckedCardsCount] = useState<number[] | number>(checkedCardsCountArray)
 
     const {
         ref,
@@ -87,7 +95,7 @@ export const Packs = () => {
         } else {
             dispatch(getPacks(currentPage, pageSize, ""));
         }
-    }, [dispatch, isLoggedIn, sort, isPrivat, currentPage, packName]);
+    }, [isLoggedIn, sort, isPrivat, currentPage, packName, checkedCardsCount]);
 
     const getPackIdFromPackComponent = (id: string | undefined) => {
         packId = id;
@@ -116,6 +124,7 @@ export const Packs = () => {
         dispatch(setPacksSort(""))
         dispatch(setCurrentPage(1))
         dispatch(setPackName(""))
+        dispatch(setCheckedCount([minCardsCount, maxCardsCount]))
         setSearchPackName("")
         setSortArrowDown(false)
         setSortArrowUp(false)
@@ -127,6 +136,7 @@ export const Packs = () => {
 
     const onSendSearchedPackName = () => {
         dispatch(setPackName(searchPackName))
+        setCheckedCardsCount([min, max])
     }
 
     const hideModal = () => {
