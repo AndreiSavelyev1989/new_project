@@ -1,7 +1,18 @@
 .settingsPackContainer {
+    margin: 0;
+    padding: 0;
     width: 75%;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin: 30px 0;
+}
+
+.setCheck {
+    margin-left: 16px;
+}
+
+.rangeSlider {
+    max-width: 500px;
+    min-width: 300px;
+    text-align: center;
 }

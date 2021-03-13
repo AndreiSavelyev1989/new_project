@@ -1,11 +1,9 @@
 .table {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 1200px;
     justify-content: center;
     align-items: center;
-    margin-right: 20px;
-    margin-left: 20px;
 }
 
 .tableContainer {

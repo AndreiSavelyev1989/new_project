@@ -13,6 +13,9 @@ export type CardsPackInitialStateType = {
     sort: undefined | string
     isPrivat: boolean
     packName: string | undefined
+    minCardsCount: number
+    maxCardsCount: number
+    checkedCount: number[] | number
 }
 
 const initialState: CardsPackInitialStateType = {
@@ -24,7 +27,10 @@ const initialState: CardsPackInitialStateType = {
     userPackId: '',
     sort: '',
     isPrivat: false,
-    packName: ''
+    packName: '',
+    minCardsCount: 0,
+    maxCardsCount: 50,
+    checkedCount: [0, 50]
 }
 
 //types
@@ -59,6 +65,8 @@ export const addPack = (cardPack: CardPacksType) => ({type: "pack/ADD_PACK", car
 export const setPacksSort = (sort: string | undefined) => ({type: "pack/SET_PACKS_SORT", sort} as const)
 export const setIsPrivat = (isPrivat: boolean) => ({type: "pack/SET_IS_PRIVAT", isPrivat} as const)
 export const setPackName = (packName: string | undefined) => ({type: "pack/SET_PACK_NAME", packName} as const)
+export const setCheckedCount = (count: Array<number> | number) => ({type: "pack/SET_COUNT_RANGE", payload: count} as const)
+export const setCardsCount = (min: number, max: number) => ({type: "pack/SET_CARDS_COUNT", min, max} as const)
 
 type ActionPacksType =
     | ActionLoginType
@@ -71,6 +79,8 @@ type ActionPacksType =
     | ReturnType<typeof setPacksSort>
     | ReturnType<typeof setIsPrivat>
     | ReturnType<typeof setPackName>
+    | ReturnType<typeof setCheckedCount>
+    | ReturnType<typeof setCardsCount>
 
 type ThunkPacksType = ThunkAction<void, AppRootStateType, unknown, ActionPacksType>
 
@@ -113,6 +123,17 @@ export const cardPackReducer = (state: CardsPackInitialStateType = initialState,
                 ...state,
                 packName: action.packName
             }
+        case "pack/SET_COUNT_RANGE":
+            return {
+                ...state,
+                checkedCount: action.payload
+            }
+        case "pack/SET_CARDS_COUNT":
+            return {
+                ...state,
+                minCardsCount: action.min,
+                maxCardsCount: action.max
+            }
         default:
             return state
     }
@@ -121,13 +142,17 @@ export const cardPackReducer = (state: CardsPackInitialStateType = initialState,
 export const getPacks = (page: number | undefined, pageCount: number | undefined, userId?: string): ThunkPacksType => async (dispatch, getState) => {
     const sort = getState().packs.sort
     const packName = getState().packs.packName
+    // @ts-ignore
+    const min = getState().packs.checkedCount[0]
+    // @ts-ignore
+    const max = getState().packs.checkedCount[1]
 
     dispatch(setIsFetchingAC(true));
     try {
-        const res = await cardsPackAPI.getPacks(page, pageCount, sort, userId, packName)
+        const res = await cardsPackAPI.getPacks(page, pageCount, sort, userId, packName, min, max)
         dispatch(setCardsPacksAC(res.data.cardPacks))
         dispatch(setTotalCardPacksCount(res.data.cardPacksTotalCount))
-        console.log(res)
+        dispatch(setCardsCount(res.data.minCardsCount, res.data.maxCardsCount))
     } catch (e) {
         const error = e.response
             ? e.response.data.error
@@ -151,9 +176,9 @@ export const createNewPack = (cardPack: CardPacksType): ThunkPacksType => async 
         dispatch(setIsFetchingAC(true));
         await cardsPackAPI.createPack(cardPack)
         dispatch(addPack(cardPack))
-        if(isPrivat){
+        if (isPrivat) {
             dispatch(getPacks(page, pageCount, userId))
-        }else {
+        } else {
             dispatch(getPacks(page, pageCount, ""))
         }
         // dispatch(setCurrentPage(1))
